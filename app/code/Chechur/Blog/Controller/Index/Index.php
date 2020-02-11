@@ -7,14 +7,27 @@ namespace Chechur\Blog\Controller\Index;
 use Chechur\Blog\Model\PostFactory;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Index extends Action implements HttpPostActionInterface
 {
+    /**
+     * @var PageFactory
+     */
     protected $_pageFactory;
 
+    /**
+     * @var PostFactory
+     */
     protected $_postFactory;
 
+    /**
+     * Index constructor.
+     * @param Context $context
+     * @param PageFactory $pageFactory
+     * @param PostFactory $postFactory
+     */
     public function __construct(
         Context $context,
         PageFactory $pageFactory,
@@ -25,6 +38,9 @@ class Index extends Action
         return parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page
+     */
     public function execute()
     {
         return $this->_pageFactory->create();

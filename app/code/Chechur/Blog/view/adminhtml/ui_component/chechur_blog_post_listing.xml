@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">chechur_blog_post_listing.chechur_blog_post_listing_data_source</item>
+            <item name="provider" xsi:type="string">chechur_blog_post_listing.chechur_blog_post_listing_data_source
+            </item>
             <item name="deps" xsi:type="string">chechur_blog_post_listing.chechur_blog_post_listing_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">chechru_blog_post_columns</item>
@@ -13,19 +15,13 @@
                 <item name="class" xsi:type="string">primary</item>
                 <item name="url" xsi:type="string">*/*/newAction</item>
             </item>
-            <!--
-            <item name="save" xsi:type="array">
-                <item name="name" xsi:type="string">Save</item>
-                <item name="label" xsi:type="string" translate="true">Save</item>
-                <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">*/*/save</item>
-            </item>
-            -->
         </item>
     </argument>
     <dataSource name="chechur_blog_post_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="class" xsi:type="string">
+                Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
+            </argument>
             <argument name="name" xsi:type="string">chechur_blog_post_listing_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">post_id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
@@ -49,9 +45,33 @@
         <bookmark name="bookmarks"/>
         <columnsControls name="columns_controls"/>
         <filterSearch name="fulltext"/>
-        <filters name="listing_filters" />
+        <filters name="listing_filters"/>
         <paging name="listing_paging"/>
         <exportButton name="export_button"/>
+
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/tree-massactions</item>
+                </item>
+            </argument>
+            <action name="delete">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">delete</item>
+                        <item name="label" xsi:type="string" translate="true">Delete</item>
+                        <item name="url" xsi:type="url" path="chechur_blog/post/massDelete"/>
+                        <item name="confirm" xsi:type="array">
+                            <item name="title" xsi:type="string" translate="true">Delete Post</item>
+                            <item name="message" xsi:type="string" translate="true">Are you sure you wan't to delete
+                                selected items?
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+
     </listingToolbar>
     <columns name="chechru_blog_post_columns">
 
@@ -59,13 +79,17 @@
             <item name="config" xsi:type="array">
                 <!-- bookmark behavior -->
                 <item name="storageConfig" xsi:type="array">
-                    <item name="provider" xsi:type="string">chechur_blog_post_listing.chechur_blog_post_listing.listing_top.bookmarks</item>
+                    <item name="provider" xsi:type="string">
+                        chechur_blog_post_listing.chechur_blog_post_listing.listing_top.bookmarks
+                    </item>
                     <item name="namespace" xsi:type="string">current</item>
                 </item>
                 <item name="childDefaults" xsi:type="array">
                     <item name="controlVisibility" xsi:type="boolean">true</item>
                     <item name="storageConfig" xsi:type="array">
-                        <item name="provider" xsi:type="string">chechur_blog_post_listing.chechur_blog_post_listing.listing_top.bookmarks</item>
+                        <item name="provider" xsi:type="string">
+                            chechur_blog_post_listing.chechur_blog_post_listing.listing_top.bookmarks
+                        </item>
                         <item name="root" xsi:type="string">columns.${ $.index }</item>
                         <!-- ${ $.index } means the current column index -->
                         <!-- ${ $.storageConfig.root }: It is referring to root property of current storageConfig

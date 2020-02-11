@@ -11,7 +11,7 @@ class SaveAndContinueButton extends \Chechur\Blog\Block\Adminhtml\Post\Edit\Save
     /**
      * @return array|string
      */
-    public function getButtonData()
+    public function getButtonData(): array
     {
         if (!$this->authorization->isAllowed("Chechur_Blog::post_save_and_continue")) {
             return [];

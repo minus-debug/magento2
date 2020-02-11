@@ -11,18 +11,4 @@
             </general>
         </blog>
     </default>
-<!--
-        <default>
-            <blog>
-                <multiselect>
-                    <first_entry>
-                        <label>Simple Product</label>
-                    </first_entry>
-                    <second_entry>
-                        <label>Configurable Product</label>
-                    </second_entry>
-                </multiselect>
-            </blog>
-        </default>
--->
 </config>

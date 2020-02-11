@@ -8,18 +8,15 @@ namespace Chechur\Blog\Block\Adminhtml\Post;
  */
 class DeleteButton extends \Chechur\Blog\Block\Adminhtml\Post\Edit\DeleteButton
 {
-
     /**
      * Get button data
      * @return array|string
      */
-    public function getButtonData()
+    public function getButtonData(): array
     {
-
         if (!$this->authorization->isAllowed("Chechur_Blog::post_delete")) {
             return [];
         }
-
         return parent::getButtonData();
     }
 }

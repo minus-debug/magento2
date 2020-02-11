@@ -5,7 +5,6 @@ namespace Chechur\Blog\Model\Post;
 
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\App\Request\DataPersistorInterface;
 
 class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
@@ -20,17 +19,11 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     protected $_loadedData;
 
     /**
-     * @var \Magento\Framework\App\Request\DataPersistorInterface
-     */
-    private $dataPersistor;
-
-    /**
      * DataProvider constructor.
      * @param $name
      * @param $primaryFieldName
      * @param $requestFieldName
      * @param CollectionFactory $postCollectionFactory
-     * @param DataPersistorInterface $dataPersistor
      * @param array $meta
      * @param array $data
      */
@@ -39,18 +32,19 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $primaryFieldName,
         $requestFieldName,
         CollectionFactory $postCollectionFactory,
-        DataPersistorInterface $dataPersistor,
         StoreManagerInterface $storeManager,
         array $meta = [],
         array $data = []
     )
     {
         $this->collection = $postCollectionFactory->create();
-        $this->dataPersistor = $dataPersistor;
         $this->storeManager = $storeManager;
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         if (isset($this->_loadedData)) {
@@ -66,22 +60,23 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
                 $m['image'][0]['name'] = $action->getImage();
                 $m['image'][0]['url'] = $this->getMediaUrl() . $action->getImage();
                 $fullData = $this->_loadedData;
-                $this->_loadedData[$action->getId()] = array_merge($fullData[$action->getId()], $m);
+                $this->_loadedData[$action->getId()]['contact'] = array_merge($fullData[$action->getId()]['contact'], $m);
             }
         }
-
-        $data = $this->dataPersistor->get('chechur_blog_post');
 
         if (!empty($data)) {
             $action = $this->collection->getNewEmptyItem();
             $action->setData($data);
             $this->_loadedData[$action->getId()] = $action->getData();
-            $this->dataPersistor->clear('chechur_blog_post');
         }
 
         return $this->_loadedData;
     }
 
+    /**
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getMediaUrl()
     {
         $mediaUrl = $this->storeManager->getStore()

@@ -7,32 +7,32 @@ namespace Chechur\Blog\Model\Config;
 class Multiselect implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     * @const int
+     * @const str
      */
     const SIMPLE_PRODUCT = 'simple';
 
     /**
-     * @const int
+     * @const str
      */
     const CONFIGURABLE_PRODUCT = 'configurable';
 
     /**
-     * @const int
+     * @const str
      */
     const GROUPED_PRODUCT = 'grouped';
 
     /**
-     * @const int
+     * @const str
      */
     const VIRTUAL_PRODUCT = 'virtual';
 
     /**
-     * @const int
+     * @const str
      */
     const BUNDLE_PRODUCT = 'bundle';
 
     /**
-     * @const int
+     * @const str
      */
     const DOWNLOADABLE_PRODUCT = 'downloadable';
 

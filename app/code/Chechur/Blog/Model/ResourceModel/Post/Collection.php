@@ -37,6 +37,9 @@ class Collection extends AbstractCollection
      */
     protected $_storeId;
 
+    /**
+     * @var \Chechur\Blog\Helper\Data
+     */
     protected $_helperData;
 
     /**
@@ -79,11 +82,19 @@ class Collection extends AbstractCollection
         $this->_init('Chechur\Blog\Model\Post', 'Chechur\Blog\Model\ResourceModel\Post');
     }
 
+    /**
+     * @return array
+     */
     public function getTypeOfVisible()
     {
         $str = $this->_helperData->getGeneralConfig('multiselect');
 
+        if ($str === '' || $str === null) {
+            $str = 'simple,configurable,grouped,virtual,bundle,downloadable';
+        }
+
         $strdata = explode(',', $str);
+
 
         return $strdata;
 

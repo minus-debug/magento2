@@ -11,7 +11,7 @@
             </argument>
         </arguments>
     </type>
-    <!--
+
     <type name="Chechur\Blog\Model\ImageUploader">
         <arguments>
 
@@ -25,7 +25,7 @@
             </argument>
         </arguments>
     </type>
-    -->
+
     <virtualType name="Chechur\Blog\Model\ResourceModel\Post\Grid\Collection"
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
@@ -57,6 +57,8 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!--
     <virtualType name="Chechur\Blog\BlogImageUpload" type="Chechur\Blog\Model\ImageUploader">
         <arguments>
             <argument name="baseTmpPath" xsi:type="string">post/tmp/image</argument>
@@ -74,6 +76,6 @@
             <argument name="imageUploader" xsi:type="object">Chechur\Blog\>BlogImageUpload</argument>
         </arguments>
     </type>
-
+-->
 
 </config>

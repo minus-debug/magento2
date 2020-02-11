@@ -10,6 +10,9 @@ use Magento\Framework\View\Asset\Repository;
 
 class Image extends \Magento\Ui\Component\Listing\Columns\Column
 {
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
 
     /**

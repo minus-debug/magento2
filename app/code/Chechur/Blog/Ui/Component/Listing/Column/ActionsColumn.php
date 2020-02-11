@@ -10,8 +10,19 @@ use Magento\Ui\Component\Listing\Columns\Column;
 
 class ActionsColumn extends Column
 {
+    /**
+     * @var UrlInterface
+     */
     protected $urlBuilder;
 
+    /**
+     * ActionsColumn constructor.
+     * @param ContextInterface $context
+     * @param UiComponentFactory $uiComponentFactory
+     * @param UrlInterface $urlBuilder
+     * @param array $components
+     * @param array $data
+     */
     public function __construct(ContextInterface $context,
                                 UiComponentFactory $uiComponentFactory,
                                 UrlInterface $urlBuilder,
@@ -23,6 +34,10 @@ class ActionsColumn extends Column
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
+    /**
+     * @param array $dataSource
+     * @return array
+     */
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {

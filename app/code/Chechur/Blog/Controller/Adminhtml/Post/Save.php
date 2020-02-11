@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
 use Magento\Backend\App\Action;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
-class Save extends Action
+class Save extends Action implements HttpPostActionInterface
 {
     /**
      * Constanta
@@ -28,27 +29,19 @@ class Save extends Action
     protected $resultRedirectFactory;
 
     /**
-     * @var \Magento\Framework\App\Request\DataPersistorInterface
-     */
-    protected $dataPersistor;
-
-    /**
      * Save constructor.
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param PostFactory $postFactory
      * @param RedirectFactory $resultRedirectFactory
-     * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Chechur\Blog\Model\PostFactory $postFactory,
-        \Magento\Backend\Model\View\Result\RedirectFactory $resultRedirectFactory,
-        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
+        \Magento\Backend\Model\View\Result\RedirectFactory $resultRedirectFactory
     )
     {
-        $this->dataPersistor = $dataPersistor;
         $this->resultPageFactory = $resultPageFactory;
         $this->postFactory = $postFactory;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -81,7 +74,6 @@ class Save extends Action
             try {
                 $post->save();
                 $this->messageManager->addSuccessMessage(__('You saved the Post.'));
-                $this->dataPersistor->clear('chechur_blog_post');
 
                 if ($this->getRequest()->getParam('back')) {
                     return $resultRedirect->setPath('*/*/edit', ['id' => $post->getId()]);
@@ -94,7 +86,6 @@ class Save extends Action
                     ->addExceptionMessage($e, __('Something went wrong while saving the Post.'));
             }
 
-            $this->dataPersistor->set('chechur_blog_post', $data);
             return $resultRedirect->setPath('*/*/edit',
                 [
                     'post_id' => $this->getRequest()->getParam('post_id')
@@ -108,7 +99,7 @@ class Save extends Action
      * @param array $rawData
      * @return array
      */
-    public function _filterFoodData(array $rawData)
+    public function _filterFoodData($rawData)
     {
         //Replace image with fileuploader field name
         $data = $rawData;

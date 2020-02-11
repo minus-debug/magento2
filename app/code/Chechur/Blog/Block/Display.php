@@ -86,7 +86,7 @@ class Display extends Template
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getImageUrl($image)
+    public function getImageUrl($image): string
     {
         $mediaUrl = $this->_storeManager
             ->getStore()

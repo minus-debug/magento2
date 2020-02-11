@@ -72,7 +72,7 @@ abstract class Post extends Action
      * @param array $data
      * @return array
      */
-    public function filterData($data)
+    public function filterData(array $data): array
     {
         $inputFilter = new \Zend_Filter_Input(
             ['dob' => $this->dateFilter],

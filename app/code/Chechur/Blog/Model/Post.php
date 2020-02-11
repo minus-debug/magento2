@@ -9,13 +9,17 @@ use Magento\Framework\Model\AbstractModel;
 
 class Post extends AbstractModel implements IdentityInterface
 {
-    /** @var string */
+    /**
+     * @const for Cach Tag string
+     */
     const CACHE_TAG = 'chechur_blog_post';
-
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $_cacheTag = 'chechur_blog_post';
-
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $_eventPrefix = 'chechur_blog_post';
 
 
@@ -27,6 +31,9 @@ class Post extends AbstractModel implements IdentityInterface
         $this->_init('Chechur\Blog\Model\ResourceModel\Post');
     }
 
+    /**
+     * @return array|string[]
+     */
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];

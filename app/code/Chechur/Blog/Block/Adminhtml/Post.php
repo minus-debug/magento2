@@ -5,6 +5,9 @@ namespace Chechur\Blog\Block\Adminhtml;
 
 class Post extends \Magento\Backend\Block\Widget\Grid\Container
 {
+    /**
+     * Upload ....
+     */
     protected function _construct()
     {
         $this->_controller = 'adminhtml_post';

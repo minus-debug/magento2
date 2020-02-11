@@ -5,6 +5,9 @@ namespace Chechur\Blog\Model;
 
 class ImageUploader
 {
+    /**
+     * @var \Magento\MediaStorage\Helper\File\Storage\Database
+     */
     private $coreFileStorageDatabase;
 
     /**
@@ -62,7 +65,7 @@ class ImageUploader
         \Psr\Log\LoggerInterface $logger,
         $baseTmpPath = 'post/tmp/image',
         $basePath = 'post/image',
-        $allowedExtensions= ['jpg', 'jpeg', 'gif', 'png']
+        $allowedExtensions = ['jpg', 'jpeg', 'gif', 'png']
     )
     {
         $this->coreFileStorageDatabase = $coreFileStorageDatabase;
@@ -161,6 +164,12 @@ class ImageUploader
         return $imageName;
     }
 
+    /**
+     * @param $fileId
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function saveFileToTmpDir($fileId)
     {
         $baseTmpPath = $this->getBaseTmpPath();

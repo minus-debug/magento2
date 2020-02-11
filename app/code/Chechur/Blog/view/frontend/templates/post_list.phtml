@@ -24,7 +24,7 @@ $_postName = $block->escapeHtml($block->getTitle(), null);
                             <?php endif;?>
                             <p align="justify"><?= $post->getPostContent() ?></p><br>
 
-                            <p align="right"><?= $post->getCreatedAt() ?></p>
+                            <p align="right">Post created at : <?= $post->getCreatedAt() ?></p><br>
                         </div>
                     <?php endforeach; ?>
 

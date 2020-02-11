@@ -14,7 +14,7 @@ class DeleteButton extends GenericButton implements ButtonProviderInterface
     /**
      * @return array
      */
-    public function getButtonData()
+    public function getButtonData(): array
     {
         $data = [];
         if ($this->getId()) {
@@ -33,7 +33,7 @@ class DeleteButton extends GenericButton implements ButtonProviderInterface
     /**
      * @return string
      */
-    public function getDeleteUrl()
+    public function getDeleteUrl(): string
     {
         return $this->getUrl('*/*/delete', ['id' => $this->getId()]);
     }

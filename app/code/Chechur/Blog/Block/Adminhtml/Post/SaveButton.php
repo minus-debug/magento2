@@ -11,7 +11,7 @@ class SaveButton extends \Chechur\Blog\Block\Adminhtml\Post\Edit\SaveButton
     /**
      * @return array|string
      */
-    public function getButtonData()
+    public function getButtonData(): array
     {
         if (!$this->authorization->isAllowed("Chechur_Blog::post_save")) {
             return [];

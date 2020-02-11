@@ -6,17 +6,30 @@ namespace Chechur\Blog\Controller\Adminhtml\Post;
 use Chechur\Blog\Model\PostFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-
-class Delete extends Action
+class Delete extends Action implements HttpPostActionInterface
 {
 
     const ADMIN_RESOURCE = 'Post';
 
+    /**
+     * @var PageFactory
+     */
     protected $resultPageFactory;
+
+    /**
+     * @var PostFactory
+     */
     protected $postFactory;
 
+    /**
+     * Delete constructor.
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param PostFactory $postFactory
+     */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
@@ -28,6 +41,9 @@ class Delete extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $id = $this->getRequest()->getParam('id');

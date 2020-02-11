@@ -6,9 +6,11 @@ namespace Chechur\Blog\Controller\Index;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\DataObject;
 
-class Test extends Action
+class est extends Action
 {
-
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
+     */
     public function execute()
     {
         $textDisplay = new DataObject(array('text' => 'Chechur'));
