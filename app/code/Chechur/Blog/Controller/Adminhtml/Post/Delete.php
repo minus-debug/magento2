@@ -7,8 +7,14 @@ use Chechur\Blog\Model\PostFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Class Delete Post From Data
+ */
 class Delete extends Action implements HttpPostActionInterface
 {
 
@@ -25,7 +31,8 @@ class Delete extends Action implements HttpPostActionInterface
     protected $postFactory;
 
     /**
-     * Delete constructor.
+     * Constract delete
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param PostFactory $postFactory
@@ -34,15 +41,16 @@ class Delete extends Action implements HttpPostActionInterface
         Context $context,
         PageFactory $resultPageFactory,
         PostFactory $postFactory
-    )
-    {
+    ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->postFactory = $postFactory;
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     * Method delete from data
+     *
+     * @return ResponseInterface|Redirect|ResultInterface
      */
     public function execute()
     {
@@ -52,7 +60,7 @@ class Delete extends Action implements HttpPostActionInterface
         if (!$post) {
             $this->messageManager->addError(__('Unable to process. please, try again.'));
             $resultRedirect = $this->resultRedirectFactory->create();
-            return $resultRedirect->setPath('*/*/', array('_current' => true));
+            return $resultRedirect->setPath('*/*/', ['_current' => true]);
         }
 
         try {
@@ -61,10 +69,10 @@ class Delete extends Action implements HttpPostActionInterface
         } catch (\Exception $e) {
             $this->messageManager->addError(__('Error while trying to delete post'));
             $resultRedirect = $this->resultRedirectFactory->create();
-            return $resultRedirect->setPath('*/*/index', array('_current' => true));
+            return $resultRedirect->setPath('*/*/index', ['_current' => true]);
         }
 
         $resultRedirect = $this->resultRedirectFactory->create();
-        return $resultRedirect->setPath('*/*/index', array('_current' => true));
+        return $resultRedirect->setPath('*/*/index', ['_current' => true]);
     }
 }

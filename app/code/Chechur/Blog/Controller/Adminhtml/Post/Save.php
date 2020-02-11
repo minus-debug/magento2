@@ -3,13 +3,23 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
+use Chechur\Blog\Model\PostFactory;
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Backend\Model\View\Result\RedirectFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Class Save saved item to data
+ */
 class Save extends Action implements HttpPostActionInterface
 {
     /**
-     * Constanta
+     * Constanta admin resource
      */
     const ADMIN_RESOURCE = 'Post';
 
@@ -29,28 +39,29 @@ class Save extends Action implements HttpPostActionInterface
     protected $resultRedirectFactory;
 
     /**
-     * Save constructor.
+     * Constract save class
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param PostFactory $postFactory
      * @param RedirectFactory $resultRedirectFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Chechur\Blog\Model\PostFactory $postFactory,
-        \Magento\Backend\Model\View\Result\RedirectFactory $resultRedirectFactory
-    )
-    {
+        Context $context,
+        PageFactory $resultPageFactory,
+        PostFactory $postFactory,
+        RedirectFactory $resultRedirectFactory
+    ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->postFactory = $postFactory;
         $this->resultRedirectFactory = $resultRedirectFactory;
-
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Backend\Model\View\Result\Redirect|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * Save item
+     *
+     * @return Redirect|ResponseInterface|ResultInterface
      */
     public function execute()
     {
@@ -58,7 +69,6 @@ class Save extends Action implements HttpPostActionInterface
         $data = $this->getRequest()->getPostValue('contact');
 
         if ($data) {
-
             if (empty($data['post_id'])) {
                 $data['post_id'] = null;
             }
@@ -86,22 +96,25 @@ class Save extends Action implements HttpPostActionInterface
                     ->addExceptionMessage($e, __('Something went wrong while saving the Post.'));
             }
 
-            return $resultRedirect->setPath('*/*/edit',
+            return $resultRedirect->setPath(
+                '*/*/edit',
                 [
                     'post_id' => $this->getRequest()->getParam('post_id')
                 ]
             );
         }
+
         return $resultRedirect->setPath('*/*/');
     }
 
     /**
+     * Filtred Array
+     *
      * @param array $rawData
      * @return array
      */
-    public function _filterFoodData($rawData)
+    private function _filterFoodData($rawData): array
     {
-        //Replace image with fileuploader field name
         $data = $rawData;
         if (isset($data['image'][0]['name'])) {
             $data['image'] = $data['image'][0]['name'];

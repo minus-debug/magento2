@@ -1,10 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chechur\Blog\Model\ResourceModel\Post;
 
+use Chechur\Blog\Helper\Data;
+use Chechur\Blog\Model\Post;
+use Chechur\Blog\Model\ResourceModel\Post as PostResourceModel;
+use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
+use Magento\Framework\Data\Collection\EntityFactory;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Class Collection use Resorse model
+ */
 class Collection extends AbstractCollection
 {
     /**
@@ -23,12 +37,12 @@ class Collection extends AbstractCollection
     protected $_eventObject = 'post_collection';
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeManager;
 
     /**
-     * @var \Magento\Framework\Stdlib\DateTime\DateTime
+     * @var DateTime
      */
     protected $_date;
 
@@ -38,66 +52,59 @@ class Collection extends AbstractCollection
     protected $_storeId;
 
     /**
-     * @var \Chechur\Blog\Helper\Data
+     * @var Data
      */
     protected $_helperData;
 
     /**
-     * @param \Magento\Framework\Data\Collection\EntityFactory $entityFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
+     * @param EntityFactory $entityFactory
+     * @param LoggerInterface $logger
+     * @param FetchStrategyInterface $fetchStrategy
+     * @param ManagerInterface $eventManager
+     * @param DateTime $date
      * @param Magento\Store\Model\StoreManagerInterface $storeManager
      * @param null|\Zend_Db_Adapter_Abstract $connection
-     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource
-     * @param \Chechur\Blog\Helper\Data $helperData
+     * @param AbstractDb $resource
+     * @param Data $helperData
      */
     public function __construct(
-        \Magento\Framework\Data\Collection\EntityFactory $entityFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Chechur\Blog\Helper\Data $helperData,
+        EntityFactory $entityFactory,
+        LoggerInterface $logger,
+        FetchStrategyInterface $fetchStrategy,
+        ManagerInterface $eventManager,
+        DateTime $date,
+        StoreManagerInterface $storeManager,
         $connection = null,
-        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
-    )
-    {
+        AbstractDb $resource = null,
+        Data $helperData
+    ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
         $this->_date = $date;
         $this->_storeManager = $storeManager;
         $this->_helperData = $helperData;
     }
 
-
     /**
-     * Define resource model
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function _construct()
     {
-        $this->_init('Chechur\Blog\Model\Post', 'Chechur\Blog\Model\ResourceModel\Post');
+        $this->_init(Post::class, PostResourceModel::class);
     }
 
     /**
+     * Get type visible Post
+     *
      * @return array
      */
-    public function getTypeOfVisible()
+    public function getTypeOfVisible(): array
     {
         $str = $this->_helperData->getGeneralConfig('multiselect');
 
-        if ($str === '' || $str === null) {
+        if (empty($str)) {
             $str = 'simple,configurable,grouped,virtual,bundle,downloadable';
         }
 
-        $strdata = explode(',', $str);
-
-
-        return $strdata;
-
+        return explode(',', $str);
     }
-
 }

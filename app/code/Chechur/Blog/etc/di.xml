@@ -58,24 +58,4 @@
         </arguments>
     </virtualType>
 
-    <!--
-    <virtualType name="Chechur\Blog\BlogImageUpload" type="Chechur\Blog\Model\ImageUploader">
-        <arguments>
-            <argument name="baseTmpPath" xsi:type="string">post/tmp/image</argument>
-            <argument name="basePath" xsi:type="string">post/image</argument>
-            <argument name="allowedExtensions" xsi:type="array">
-                <item name="jpg" xsi:type="string">jpg</item>
-                <item name="jpeg" xsi:type="string">jpeg</item>
-                <item name="gif" xsi:type="string">gif</item>
-                <item name="png" xsi:type="string">png</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="Chechur\Blog\Controller\Adminhtml\Image\Upload">
-        <arguments>
-            <argument name="imageUploader" xsi:type="object">Chechur\Blog\>BlogImageUpload</argument>
-        </arguments>
-    </type>
--->
-
 </config>

@@ -5,12 +5,17 @@ namespace Chechur\Blog\Controller\Adminhtml\Post;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Edit extends Action implements HttpPostActionInterface
+/**
+ * Class Edit redirected to save class
+ */
+class Edit extends Action implements HttpGetActionInterface
 {
-
+    /**
+     * Constant Admin resource
+     */
     const ADMIN_RESOURCE = 'Post';
 
     /**
@@ -19,19 +24,22 @@ class Edit extends Action implements HttpPostActionInterface
     protected $resultPageFactory;
 
     /**
-     * Edit constructor.
+     * Construct Edit
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory)
-    {
+        PageFactory $resultPageFactory
+    ) {
         $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
     }
 
     /**
+     * Redirect to save class
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page
      */
     public function execute()

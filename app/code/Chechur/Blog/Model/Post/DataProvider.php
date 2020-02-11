@@ -1,15 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chechur\Blog\Model\Post;
 
+use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Ui\DataProvider\AbstractDataProvider;
 
-class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
+/**
+ * Class DataProvider uploded data
+ */
+class DataProvider extends AbstractDataProvider
 {
     /**
-     * @var \Chechur\Blog\Model\ResourceModel\Post\Collection|void
+     * @var Collection
      */
     protected $collection;
 
@@ -19,11 +26,18 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     protected $_loadedData;
 
     /**
-     * DataProvider constructor.
-     * @param $name
-     * @param $primaryFieldName
-     * @param $requestFieldName
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * Constract DataProvider
+     *
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
      * @param CollectionFactory $postCollectionFactory
+     * @param StoreManagerInterface $storeManager
      * @param array $meta
      * @param array $data
      */
@@ -35,14 +49,16 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         StoreManagerInterface $storeManager,
         array $meta = [],
         array $data = []
-    )
-    {
-        $this->collection = $postCollectionFactory->create();
+    ) {
+        $this->collectionFactory = $postCollectionFactory;
+        $this->collection = $this->collectionFactory->create();
         $this->storeManager = $storeManager;
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
 
     /**
+     * Get data from collection
+     *
      * @return array
      */
     public function getData()
@@ -51,21 +67,20 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
             return $this->_loadedData;
         }
 
-        $items = $this->collection->getItems();
-
+        $collection = $this->collectionFactory->create();
+        $items = $collection->getItems();
 
         foreach ($items as $action) {
             $this->_loadedData[$action->getId()]['contact'] = $action->getData();
             if ($action->getImage()) {
-                $m['image'][0]['name'] = $action->getImage();
-                $m['image'][0]['url'] = $this->getMediaUrl() . $action->getImage();
-                $fullData = $this->_loadedData;
-                $this->_loadedData[$action->getId()]['contact'] = array_merge($fullData[$action->getId()]['contact'], $m);
+                $m[0]['name'] = $action->getImage();
+                $m[0]['url'] = $this->getMediaUrl() . $action->getImage();
+                $this->_loadedData[$action->getId()]['contact']['image'] = $m;
             }
         }
 
         if (!empty($data)) {
-            $action = $this->collection->getNewEmptyItem();
+            $action = $collection->getNewEmptyItem();
             $action->setData($data);
             $this->_loadedData[$action->getId()] = $action->getData();
         }
@@ -74,14 +89,12 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     }
 
     /**
+     * Get Media Url
+     *
      * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getMediaUrl()
+    private function getMediaUrl(): string
     {
-        $mediaUrl = $this->storeManager->getStore()
-                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'post/tmp/image/';
-        return $mediaUrl;
+        return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/tmp/image/';
     }
-
 }

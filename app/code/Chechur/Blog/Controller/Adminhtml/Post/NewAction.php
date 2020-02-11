@@ -4,15 +4,19 @@ declare(strict_types=1);
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
 use Magento\Backend\App\Action;
-use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Backend\Model\View\Result\Page;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 
-class NewAction extends Action implements HttpPostActionInterface
+/**
+ * Class NewAction redirect to saveAction or editAction
+ */
+class NewAction extends Action implements HttpGetActionInterface
 {
     /**
-     * Edit A Contact Page
+     * Redirect to page action and render
      *
-     * @return \Magento\Backend\Model\View\Result\Page|\Magento\Backend\Model\View\Result\Redirect
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @return Page|Redirect
      */
     public function execute()
     {

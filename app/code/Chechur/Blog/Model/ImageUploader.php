@@ -3,30 +3,44 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Model;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Filesystem\Directory\WriteInterface;
+use Magento\Framework\UrlInterface;
+use Magento\MediaStorage\Helper\File\Storage\Database;
+use Magento\MediaStorage\Model\File\Uploader;
+use Magento\MediaStorage\Model\File\UploaderFactory;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Image uploader for blog post.
+ */
 class ImageUploader
 {
     /**
-     * @var \Magento\MediaStorage\Helper\File\Storage\Database
+     * @var Database
      */
     private $coreFileStorageDatabase;
 
     /**
-     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
+     * @var WriteInterface
      */
     private $mediaDirectory;
 
     /**
-     * @var \Magento\MediaStorage\Model\File\UploaderFactory
+     * @var UploaderFactory
      */
     private $uploaderFactory;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     private $storeManager;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -46,30 +60,29 @@ class ImageUploader
     public $allowedExtensions;
 
     /**
-     * ImageUploader constructor.
-     * @param \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase
-     * @param \Magento\Framework\Filesystem $filesystem
-     * @param \Magento\MediaStorage\Model\File\UploaderFactory $uploaderFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Psr\Log\LoggerInterface $logger
+     * Constract image uploader
+     *
+     * @param Database $coreFileStorageDatabase
+     * @param Filesystem $filesystem
+     * @param UploaderFactory $uploaderFactory
+     * @param StoreManagerInterface $storeManager
+     * @param LoggerInterface $logger
      * @param string $baseTmpPath
      * @param string $basePath
      * @param array $allowedExtensions
-     * @throws \Magento\Framework\Exception\FileSystemException\
      */
     public function __construct(
-        \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase,
-        \Magento\Framework\Filesystem $filesystem,
-        \Magento\MediaStorage\Model\File\UploaderFactory $uploaderFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Psr\Log\LoggerInterface $logger,
-        $baseTmpPath = 'post/tmp/image',
-        $basePath = 'post/image',
-        $allowedExtensions = ['jpg', 'jpeg', 'gif', 'png']
-    )
-    {
+        Database $coreFileStorageDatabase,
+        Filesystem $filesystem,
+        UploaderFactory $uploaderFactory,
+        StoreManagerInterface $storeManager,
+        LoggerInterface $logger,
+        string $baseTmpPath = 'post/tmp/image',
+        string $basePath = 'post/image',
+        array $allowedExtensions = ['jpg', 'jpeg', 'gif', 'png']
+    ) {
         $this->coreFileStorageDatabase = $coreFileStorageDatabase;
-        $this->mediaDirectory = $filesystem->getDirectoryWrite(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+        $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->uploaderFactory = $uploaderFactory;
         $this->storeManager = $storeManager;
         $this->logger = $logger;
@@ -79,69 +92,88 @@ class ImageUploader
     }
 
     /**
-     * @param $baseTmpPath
+     * Set baseTmpPath
+     *
+     * @param string $baseTmpPath
+     * @return void
      */
-    public function setBaseTmpPath($baseTmpPath)
+    public function setBaseTmpPath(string $baseTmpPath): void
     {
         $this->baseTmpPath = $baseTmpPath;
     }
 
     /**
-     * @param $basePath
+     * Set basePath
+     *
+     * @param string $basePath
+     * @return void
      */
-    public function setBasePath($basePath)
+    public function setBasePath(string $basePath): void
     {
         $this->basePath = $basePath;
     }
 
     /**
-     * @param $allowedExtensions
+     * Set allowedExtensions
+     *
+     * @param array $allowedExtensions
+     * @return void
      */
-    public function setAllowedExtensions($allowedExtensions)
+    public function setAllowedExtensions($allowedExtensions): void
     {
         $this->allowedExtensions = $allowedExtensions;
     }
 
     /**
+     * Get baseTmpPath
+     *
      * @return string
      */
-    public function getBaseTmpPath()
+    public function getBaseTmpPath(): string
     {
         return $this->baseTmpPath;
     }
 
     /**
+     * Get basePath
+     *
      * @return string
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         return $this->basePath;
     }
 
     /**
+     * Get AllowedExtensions
+     *
      * @return array
      */
-    public function getAllowedExtensions()
+    public function getAllowedExtensions(): array
     {
         return $this->allowedExtensions;
     }
 
     /**
-     * @param $path
-     * @param $imageName
+     * Get file path
+     *
+     * @param string $path
+     * @param string $imageName
      * @return string
      */
-    public function getFilePath($path, $imageName)
+    public function getFilePath(string $path, string $imageName): string
     {
         return rtrim($path, '/') . '/' . ltrim($imageName, '/');
     }
 
     /**
-     * @param $imageName
+     * Move file from tmp
+     *
+     * @param string $imageName
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
-    public function moveFileFromTmp($imageName)
+    public function moveFileFromTmp(string $imageName)
     {
         $baseTmpPath = $this->getBaseTmpPath();
         $basePath = $this->getBasePath();
@@ -157,55 +189,50 @@ class ImageUploader
                 $baseImagePath
             );
         } catch (\Exception $e) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('Something went wrong while saving the file(s).')
-            );
+            throw new LocalizedException(__('Something went wrong while saving the file(s).'));
         }
+
         return $imageName;
     }
 
     /**
-     * @param $fileId
+     * Save file to tmp
+     *
+     * @param  string $fileId
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
      */
-    public function saveFileToTmpDir($fileId)
+    public function saveFileToTmpDir($fileId): array
     {
         $baseTmpPath = $this->getBaseTmpPath();
-
-        /** @var \Magento\MediaStorage\Model\File\Uploader $uploader */
+        /** @var Uploader $uploader */
         $uploader = $this->uploaderFactory->create(['fileId' => $fileId]);
-
         $uploader->setAllowedExtensions($this->getAllowedExtensions());
         $uploader->setAllowRenameFiles(true);
-
         $result = $uploader->save($this->mediaDirectory->getAbsolutePath($baseTmpPath));
+
         if (!$result) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('File can not be saved to the destination folder.')
-            );
+            throw new LocalizedException(__('File can not be saved to the destination folder.'));
         }
 
         $result['tmp_name'] = str_replace('\\', '/', $result['tmp_name']);
         $result['path'] = str_replace('\\', '/', $result['path']);
-        $result['url'] = $this->storeManager
-                ->getStore()
-                ->getBaseUrl(
-                    \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
-                ) . $this->getFilePath($baseTmpPath, $result['file']);
+        $result['url'] = $this->storeManager->getStore()
+                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $this->getFilePath($baseTmpPath, $result['file']);
         $result['name'] = $result['file'];
+
         if (isset($result['file'])) {
             try {
                 $relativePath = rtrim($baseTmpPath, '/') . '/' . ltrim($result['file'], '/');
                 $this->coreFileStorageDatabase->saveFile($relativePath);
             } catch (\Exception $e) {
                 $this->logger->critical($e);
-                throw new \Magento\Framework\Exception\LocalizedException(
+                throw new LocalizedException(
                     __('Something went wrong while saving the file(s).')
                 );
             }
         }
+
         return $result;
     }
 }

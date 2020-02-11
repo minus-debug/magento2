@@ -3,31 +3,40 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Image;
 
+use Chechur\Blog\Model\ImageUploader;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 
+/**
+ * Class Upload image to tmp dir
+ */
 class Upload extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
     /**
-     * @var \Chechur\Blog\Model\ImageUploader
+     * Property for Image Uploader
+     *
+     * @var ImageUploader
      */
     public $imageUploader;
 
     /**
-     * Upload constructor.
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Chechur\Blog\Model\ImageUploader $imageUploader
+     * Constract Upload
+     *
+     * @param Context $context
+     * @param ImageUploader $imageUploader
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Chechur\Blog\Model\ImageUploader $imageUploader
-    )
-    {
+        Context $context,
+        ImageUploader $imageUploader
+    ) {
         parent::__construct($context);
         $this->imageUploader = $imageUploader;
     }
 
     /**
+     * Checker
+     *
      * @return bool
      */
     public function _isAllowed(): bool
@@ -37,6 +46,8 @@ class Upload extends \Magento\Backend\App\Action implements HttpPostActionInterf
     }
 
     /**
+     * Save Image And Set Cookie
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()

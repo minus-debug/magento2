@@ -1,42 +1,49 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
-
+use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Ui\Component\MassAction\Filter;
 
-class MassDelete extends \Magento\Backend\App\Action implements HttpPostActionInterface
+/**
+ * Class MassDelete Delete array of items
+ */
+class MassDelete extends Action implements HttpPostActionInterface
 {
 
     /**
-     * @var \Magento\Ui\Component\MassAction\Filter
+     * @var Filter
      */
     private $filter;
 
     /**
-     * @var \Chechur\Blog\Model\ResourceModel\Post\CollectionFactory
+     * @var CollectionFactory
      */
     private $collectionFactory;
 
     /**
      * MassDelete constructor.
-     * @param \Magento\Ui\Component\MassAction\Filter $filter
-     * @param \Chechur\Blog\Model\ResourceModel\Post\CollectionFactory $collectionFactory
-     * @param \Magento\Backend\App\Action\Context $context
+     * @param Filter $filter
+     * @param CollectionFactory $collectionFactory
+     * @param Context $context
      */
     public function __construct(
-        \Magento\Ui\Component\MassAction\Filter $filter,
-        \Chechur\Blog\Model\ResourceModel\Post\CollectionFactory $collectionFactory,
-        \Magento\Backend\App\Action\Context $context
-    )
-    {
+        Filter $filter,
+        CollectionFactory $collectionFactory,
+        Context $context
+    ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         parent::__construct($context);
     }
 
     /**
+     * Delete items and redirect to grid
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()

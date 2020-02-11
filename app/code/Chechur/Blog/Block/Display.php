@@ -3,23 +3,31 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Block;
 
+use Chechur\Blog\Model\PostFactory;
+use Chechur\Blog\Model\ResourceModel\Post\Collection;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * Display blog.
+ */
 class Display extends Template
 {
     /**
-     * @var \Chechur\Blog\Model\PostFactory
+     * @var PostFactory
      */
     protected $_postFactory;
 
-    /**\
-     * @var \Chechur\Blog\Model\ResourceModel\Post\Collection
+    /**
+     * @var Collection
      */
     protected $_collection;
 
     /**
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
     protected $_registry;
 
@@ -29,21 +37,19 @@ class Display extends Template
     protected $_storeManager;
 
     /**
-     * Display constructor.
-     * @param Template\Context $context
-     * @param \Chechur\Blog\Model\PostFactory $postFactory
-     * @param \Chechur\Blog\Model\ResourceModel\Post\Collection $collection
-     * @param \Magento\Framework\Registry $registry
+     * @param Context $context
+     * @param PostFactory $postFactory
+     * @param Collection $collection
+     * @param Registry $registry
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Chechur\Blog\Model\PostFactory $postFactory,
-        \Chechur\Blog\Model\ResourceModel\Post\Collection $collection,
-        \Magento\Framework\Registry $registry,
+        Context $context,
+        PostFactory $postFactory,
+        Collection $collection,
+        Registry $registry,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->_storeManager = $storeManager;
         $this->_registry = $registry;
         $this->_collection = $collection;
@@ -52,7 +58,9 @@ class Display extends Template
     }
 
     /**
-     * @return \Magento\Framework\Phrase
+     * Get blog title
+     *
+     * @return string
      */
     public function blog(): string
     {
@@ -62,11 +70,10 @@ class Display extends Template
     /**
      * Get array of Collection
      *
-     * @return \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+     * @return AbstractCollection
      */
-    public function getPostCollection(): array
+    public function getPostCollection(): AbstractCollection
     {
-
         /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
         $product = $this->_registry->registry('current_product');
 
@@ -75,24 +82,25 @@ class Display extends Template
             $productTypeId = $product->getTypeId();
             if (in_array($productTypeId, $configTypeOfProduct)) {
                 $post = $this->_postFactory->create();
-                return $post->getCollection()->addFieldToFilter('type', array('eq' => $productTypeId))
+                return $post->getCollection()->addFieldToFilter('type', ['eq' => $productTypeId])
                     ->setOrder('created_at', 'ASC')->setPageSize(5);
             }
         }
     }
 
     /**
-     * @param $image
+     * Retrieve image URL.
+     *
+     * @param string $image
      * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getImageUrl($image): string
+    public function getImageUrl(string $image): string
     {
         $mediaUrl = $this->_storeManager
             ->getStore()
             ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
         $imageUrl = $mediaUrl . 'post/tmp/image/' . $image;
+
         return $imageUrl;
     }
-
 }

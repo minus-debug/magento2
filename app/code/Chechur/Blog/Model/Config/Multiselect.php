@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Model\Config;
 
+use Magento\Framework\Option\ArrayInterface;
 
-class Multiselect implements \Magento\Framework\Option\ArrayInterface
+/**
+ * Class Multiselect create array of values to configuration
+ */
+class Multiselect implements ArrayInterface
 {
     /**
      * @const str
@@ -37,11 +41,11 @@ class Multiselect implements \Magento\Framework\Option\ArrayInterface
     const DOWNLOADABLE_PRODUCT = 'downloadable';
 
     /**
-     * Options int
+     * Options srt
      *
      * @return array
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         return [
             ['value' => self::SIMPLE_PRODUCT, 'label' => __('Simple Product (default)')],
@@ -58,12 +62,13 @@ class Multiselect implements \Magento\Framework\Option\ArrayInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $array = [];
         foreach ($this->toOptionArray() as $item) {
             $array[$item['value']] = $item['label'];
         }
+
         return $array;
     }
 }
