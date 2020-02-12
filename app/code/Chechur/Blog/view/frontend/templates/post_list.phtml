@@ -27,16 +27,9 @@ $_postName = $block->escapeHtml($block->getTitle(), null);
                             <p align="right">Post created at : <?= $post->getCreatedAt() ?></p><br>
                         </div>
                     <?php endforeach; ?>
-
                 </div>
-
-                <div class="clear clearfix"></div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="post-bottom">
-        <?= $block->getChildHtml('blog.post.bottom') ?>
-    </div>
-</div>
-</div>
