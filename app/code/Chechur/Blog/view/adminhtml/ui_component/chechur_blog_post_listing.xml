@@ -48,7 +48,6 @@
         <filters name="listing_filters"/>
         <paging name="listing_paging"/>
         <exportButton name="export_button"/>
-
         <massaction name="listing_massaction">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -71,10 +70,8 @@
                 </argument>
             </action>
         </massaction>
-
     </listingToolbar>
     <columns name="chechru_blog_post_columns">
-
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
                 <!-- bookmark behavior -->
@@ -99,7 +96,6 @@
                 </item>
             </item>
         </argument>
-
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -107,15 +103,6 @@
                 </item>
             </argument>
         </selectionsColumn>
-        <!--
-        <actionsColumn name="action_column" class="Chechur\Blog\Ui\Component\Listing\Column\ActionColumn">
-            <settings>
-                <label translate="true">ActionColumn</label>
-            </settings>
-        </actionsColumn>
-        -->
-
-
         <column name="post_id">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -137,7 +124,6 @@
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
                     </item>
-
                 </item>
             </argument>
         </column>
@@ -153,7 +139,6 @@
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
                     </item>
-
                 </item>
             </argument>
         </column>

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
+use Chechur\Blog\Api\PostRepositoryInterface;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -26,18 +27,25 @@ class MassDelete extends Action implements HttpPostActionInterface
     private $collectionFactory;
 
     /**
-     * MassDelete constructor.
+     * @var PostRepositoryInterface
+     */
+    private $postRepository;
+
+    /**
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
+     * @param PostRepositoryInterface $postRepository
      * @param Context $context
      */
     public function __construct(
         Filter $filter,
         CollectionFactory $collectionFactory,
+        PostRepositoryInterface $postRepository,
         Context $context
     ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
+        $this->postRepository = $postRepository;
         parent::__construct($context);
     }
 
@@ -51,15 +59,17 @@ class MassDelete extends Action implements HttpPostActionInterface
         try {
             $logCollection = $this->filter->getCollection($this->collectionFactory->create());
             $itemsDeleted = 0;
+
             foreach ($logCollection as $item) {
-                $item->delete();
+                $this->postRepository->delete($item);
                 $itemsDeleted++;
             }
-            $this->messageManager->addSuccess(__('A total of %1 Post(s) were deleted.', $itemsDeleted));
+            $this->messageManager->addSuccessMessage(__('A total of %1 Post(s) were deleted.', $itemsDeleted));
         } catch (\Exception $e) {
-            $this->messageManager->addError($e->getMessage());
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
         $resultRedirect = $this->resultRedirectFactory->create();
+
         return $resultRedirect->setPath('chechur_blog/post');
     }
 }

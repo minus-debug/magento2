@@ -10,14 +10,6 @@
         <item name="layout" xsi:type="array">
             <item name="type" xsi:type="string">tabs</item>
         </item>
-        <!--
-        <item name="buttons" xsi:type="array">
-            <item name="back" xsi:type="string">Chechur\Blog\Block\Adminhtml\Post\Edit\BackButton</item>
-            <item name="delete" xsi:type="string">Chechur\Blog\Block\Adminhtml\Post\Edit\DeleteButton</item>
-            <item name="reset" xsi:type="string">Chechur\Blog\Block\Adminhtml\Post\Edit\ResetButton</item>
-            <item name="save" xsi:type="string">Chechur\Blog\Block\Adminhtml\Post\Edit\SaveButton</item>
-        </item>
-        -->
     </argument>
     <settings>
         <buttons>
@@ -32,14 +24,12 @@
             <dep>chechur_blog_post_form.chechur_blog_post_form_data_source</dep>
         </deps>
     </settings>
-
     <dataSource name="chechur_blog_post_form_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
             <argument name="class" xsi:type="string">Chechur\Blog\Model\Post\DataProvider</argument>
             <argument name="name" xsi:type="string">chechur_blog_post_form_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">post_id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
-
         </argument>
         <argument name="data" xsi:type="array">
             <item name="js_config" xsi:type="array">
@@ -50,14 +40,12 @@
             <submitUrl path="chechur_blog/post/save"/>
         </settings>
     </dataSource>
-
     <fieldset name="contact">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
                 <item name="label" xsi:type="string" translate="true">Sample Fieldset</item>
             </item>
         </argument>
-
         <!-- This field represents form id and is hidden -->
         <field name="post_id">
             <argument name="data" xsi:type="array">
@@ -69,8 +57,6 @@
                 </item>
             </argument>
         </field>
-
-
         <!-- This field has data type 'text' and standard 'input' form element and looks like input -->
         <field name="theme">
             <argument name="data" xsi:type="array">
@@ -83,10 +69,9 @@
                 </item>
             </argument>
         </field>
-
         <field name="type">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Chechur\Blog\Model\Config\Multiselect</item>
+                <item name="options" xsi:type="object">Chechur\Blog\Model\Config\Config</item>
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Type</item>
@@ -112,7 +97,6 @@
                 </item>
             </argument>
         </field>
-
         <field name="image">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -131,7 +115,6 @@
                 </item>
             </argument>
         </field>
-
         <field name="created_at">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -160,6 +143,5 @@
                 </item>
             </argument>
         </field>
-
     </fieldset>
 </form>

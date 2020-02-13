@@ -47,11 +47,11 @@ class Data extends AbstractHelper
     /**
      * Get config
      *
-     * @param string $config_path
+     * @param string $configPath
      * @return mixed
      */
-    public function getConfig(string $config_path)
+    public function getConfig(string $configPath)
     {
-        return $this->scopeConfig->getValue($config_path, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue($configPath, ScopeInterface::SCOPE_STORE);
     }
 }

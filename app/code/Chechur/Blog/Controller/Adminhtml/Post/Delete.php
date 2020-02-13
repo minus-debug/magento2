@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
-use Chechur\Blog\Model\PostFactory;
+use Chechur\Blog\Api\PostRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
@@ -26,24 +28,24 @@ class Delete extends Action implements HttpGetActionInterface
     protected $resultPageFactory;
 
     /**
-     * @var PostFactory
+     * @var PostRepositoryInterface
      */
-    protected $postFactory;
+    private $postRepositoryInterface;
 
     /**
      * Constract delete
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
-     * @param PostFactory $postFactory
+     * @param PostRepositoryInterface $postRepositoryInterface
      */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
-        PostFactory $postFactory
+        PostRepositoryInterface $postRepositoryInterface
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        $this->postFactory = $postFactory;
+        $this->postRepositoryInterface = $postRepositoryInterface;
         parent::__construct($context);
     }
 
@@ -54,25 +56,18 @@ class Delete extends Action implements HttpGetActionInterface
      */
     public function execute()
     {
-        $id = $this->getRequest()->getParam('id');
-        $post = $this->postFactory->create()->load($id);
-
-        if (!$post) {
-            $this->messageManager->addError(__('Unable to process. please, try again.'));
-            $resultRedirect = $this->resultRedirectFactory->create();
-            return $resultRedirect->setPath('*/*/', ['_current' => true]);
-        }
+        $id = (int)$this->getRequest()->getParam('id');
+        $resultRedirect = $this->resultRedirectFactory->create();
 
         try {
-            $post->delete();
-            $this->messageManager->addSuccess(__('Your post has been deleted !'));
-        } catch (\Exception $e) {
-            $this->messageManager->addError(__('Error while trying to delete post'));
-            $resultRedirect = $this->resultRedirectFactory->create();
-            return $resultRedirect->setPath('*/*/index', ['_current' => true]);
+            $this->postRepositoryInterface->deleteById($id);
+            $this->messageManager->addSuccessMessage(__('Your post has been deleted !'));
+        } catch (NoSuchEntityException $e) {
+            $this->messageManager->addErrorMessage(__('Error while trying to delete post'));
+        } catch (StateException $e) {
+            $this->messageManager->addErrorMessage(__('Sumething when wrong during process post'));
         }
 
-        $resultRedirect = $this->resultRedirectFactory->create();
         return $resultRedirect->setPath('*/*/index', ['_current' => true]);
     }
 }

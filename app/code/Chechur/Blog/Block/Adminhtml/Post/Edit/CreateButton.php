@@ -22,7 +22,7 @@ class CreateButton extends GenericButton implements ButtonProviderInterface
                 'mage-init' => ['button' => ['event' => 'save']],
                 'form-role' => 'save',
             ],
-            'sort_order' => 10
+            'sort_order' => 10,
         ];
     }
 }

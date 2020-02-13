@@ -10,7 +10,6 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
  */
 class DeleteButton extends GenericButton implements ButtonProviderInterface
 {
-
     /**
      * @inheritDoc
      */

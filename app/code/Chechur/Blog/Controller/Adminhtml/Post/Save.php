@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
+use Chechur\Blog\Api\PostRepositoryInterface;
+use Chechur\Blog\Api\Data\PostInterface;
+use Chechur\Blog\Api\Data\PostInterfaceFactory;
 use Chechur\Blog\Model\PostFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -13,6 +16,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\Api\DataObjectHelper;
 
 /**
  * Class Save saved item to data
@@ -25,103 +29,94 @@ class Save extends Action implements HttpPostActionInterface
     const ADMIN_RESOURCE = 'Post';
 
     /**
-     * @var PageFactory
+     * @var DataObjectHelper
      */
-    protected $resultPageFactory;
+    private $dataObjectHelper;
 
     /**
-     * @var PostFactory
+     * @var PostInterfaceFactory
      */
-    protected $postFactory;
+    private $postFactory;
 
     /**
-     * @var RedirectFactory
+     * @var PostRepositoryInterface
      */
-    protected $resultRedirectFactory;
+    private $postRepository;
 
     /**
-     * Constract save class
-     *
      * @param Context $context
-     * @param PageFactory $resultPageFactory
-     * @param PostFactory $postFactory
-     * @param RedirectFactory $resultRedirectFactory
+     * @param DataObjectHelper $dataObjectHelper
+     * @param PostInterfaceFactory $postFactory
+     * @param PostRepositoryInterface $postRepository
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory,
-        PostFactory $postFactory,
-        RedirectFactory $resultRedirectFactory
+        DataObjectHelper $dataObjectHelper,
+        PostInterfaceFactory $postFactory,
+        PostRepositoryInterface $postRepository
     ) {
-        $this->resultPageFactory = $resultPageFactory;
-        $this->postFactory = $postFactory;
-        $this->resultRedirectFactory = $resultRedirectFactory;
         parent::__construct($context);
+        $this->dataObjectHelper = $dataObjectHelper;
+        $this->postFactory = $postFactory;
+        $this->postRepository = $postRepository;
     }
 
     /**
-     * Save item
+     * Save blog post.
      *
-     * @return Redirect|ResponseInterface|ResultInterface
+     * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        $resultRedirect = $this->resultRedirectFactory->create();
-        $data = $this->getRequest()->getPostValue('contact');
+        $redirect = $this->resultRedirectFactory->create();
 
-        if ($data) {
-            if (empty($data['post_id'])) {
-                $data['post_id'] = null;
-            }
-            $id = $data['post_id'];
-            $post = $this->postFactory->create()->load($id);
-
-            $data = $this->_filterFoodData($data);
-            $data = array_filter($data, function ($value) {
-                return $value !== '';
-            });
-            $post->setData($data);
-
-            try {
-                $post->save();
-                $this->messageManager->addSuccessMessage(__('You saved the Post.'));
-
-                if ($this->getRequest()->getParam('back')) {
-                    return $resultRedirect->setPath('*/*/edit', ['id' => $post->getId()]);
-                }
-                return $resultRedirect->setPath('*/*/');
-            } catch (LocalizedException $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
-            } catch (\Exception $e) {
-                $this->messageManager
-                    ->addExceptionMessage($e, __('Something went wrong while saving the Post.'));
-            }
-
-            return $resultRedirect->setPath(
-                '*/*/edit',
-                [
-                    'post_id' => $this->getRequest()->getParam('post_id')
-                ]
-            );
+        try {
+            $saveData = $this->getDataToSave();
+            $blogPostId = $saveData[PostInterface::FIELD_POST_ID];
+            $blogToSave = $blogPostId ? $this->postRepository->get($blogPostId) : $this->postFactory->create();
+            $this->dataObjectHelper->populateWithArray($blogToSave, $saveData, PostInterface::class);
+            $this->postRepository->save($blogToSave);
+            $this->messageManager->addSuccessMessage(__('You successfully saved the news.'));
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
 
-        return $resultRedirect->setPath('*/*/');
+        return $redirect->setPath('*/*/', []);
     }
 
     /**
-     * Filtred Array
+     * Build data to save from post data.
      *
-     * @param array $rawData
      * @return array
+     * @throws LocalizedException
      */
-    private function _filterFoodData($rawData): array
+    private function getDataToSave(): array
     {
-        $data = $rawData;
-        if (isset($data['image'][0]['name'])) {
-            $data['image'] = $data['image'][0]['name'];
-        } else {
-            $data['image'] = null;
+        $contactData = $this->getRequest()->getParam('contact');
+
+        if (null === $contactData) {
+            throw new LocalizedException(__('Please specify data to save.'));
         }
-        return $data;
+
+        $blogPostId = null;
+
+        if (isset($contactData[PostInterface::FIELD_POST_ID])
+            && $contactData[PostInterface::FIELD_POST_ID]
+        ) {
+            $blogPostId = (int)$contactData[PostInterface::FIELD_POST_ID];
+        }
+
+        $imageName = $contactData[PostInterface::FIELD_IMAGE]
+            ? $contactData[PostInterface::FIELD_IMAGE][0]['name'] : '';
+
+        return [
+            PostInterface::FIELD_POST_ID => $blogPostId,
+            PostInterface::FIELD_THEME => $contactData[PostInterface::FIELD_THEME] ?? '',
+            PostInterface::FIELD_POST_CONTENT => $contactData[PostInterface::FIELD_POST_CONTENT] ?? '',
+            PostInterface::FIELD_IMAGE => $imageName,
+            PostInterface::FIELD_TYPE => $contactData[PostInterface::FIELD_TYPE] ?? '',
+            PostInterface::FIELD_UPDATED_AT => $contactData[PostInterface::FIELD_UPDATED_AT] ?? '',
+            PostInterface::FIELD_CREATED_AT => $contactData[PostInterface::FIELD_CREATED_AT] ?? '',
+        ];
     }
 }

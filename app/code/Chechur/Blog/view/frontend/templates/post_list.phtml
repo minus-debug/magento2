@@ -4,7 +4,7 @@
  * @var \Magento\Framework\Escaper $escaper
  */
 ?>
-<h1><?= $escaper->escapeHtml($block->blog()); ?></h1>
+<h1><?= $escaper->escapeHtml($block->getBlockTitle()); ?></h1>
 <div class="post-view">
     <div class="post-holder post-holder-<?= $escaper->escapeHtml($block->getId()); ?>">
         <div class="post-content">
@@ -27,6 +27,9 @@
                             </p><br>
                         </div>
                     <?php endforeach; ?>
+                </div>
+                <div class="blog-post-pager">
+                    <?= $block->getChildHtml('blog.post.pager'); ?>
                 </div>
                 <div class="clear clearfix"></div>
             </div>

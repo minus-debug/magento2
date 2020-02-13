@@ -9,7 +9,8 @@
         "magento/framework": "*",
         "magento/module-store": "*",
         "magento/module-ui": "*",
-        "magento/module-backend": "*"
+        "magento/module-backend": "*",
+        "magento/module-theme": "*"
     },
     "autoload": {
           "files": [

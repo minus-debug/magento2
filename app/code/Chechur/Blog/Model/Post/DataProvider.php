@@ -21,9 +21,9 @@ class DataProvider extends AbstractDataProvider
     protected $collection;
 
     /**
-     * @var
+     * @var array
      */
-    protected $_loadedData;
+    private $loadedData;
 
     /**
      * @var StoreManagerInterface
@@ -62,27 +62,22 @@ class DataProvider extends AbstractDataProvider
      */
     public function getData()
     {
-        if (isset($this->_loadedData)) {
-            return $this->_loadedData;
+        if (isset($this->loadedData)) {
+            return $this->loadedData;
         }
         $items = $this->collection->getItems();
 
         foreach ($items as $action) {
-            $this->_loadedData[$action->getId()]['contact'] = $action->getData();
+            $this->loadedData[$action->getId()]['contact'] = $action->getData();
             if ($action->getImage()) {
-                $m[0]['name'] = $action->getImage();
-                $m[0]['url'] = $this->getMediaUrl() . $action->getImage();
-                $this->_loadedData[$action->getId()]['contact']['image'] = $m;
+                $this->loadedData[$action->getId()]['contact']['image'] = [0 =>
+                    ['name' => $action->getImage(),
+                        'url' => $this->getMediaUrl() . $action->getImage()]
+                ];
             }
         }
 
-        if (!empty($data)) {
-            $action = $this->collection->getNewEmptyItem();
-            $action->setData($data);
-            $this->_loadedData[$action->getId()] = $action->getData();
-        }
-
-        return $this->_loadedData;
+        return $this->loadedData;
     }
 
     /**

@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Image;
 
-use Chechur\Blog\Model\ImageUploader;
+use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Catalog\Model\ImageUploader;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 
 /**
  * Class Upload image to tmp dir
  */
-class Upload extends \Magento\Backend\App\Action implements HttpPostActionInterface
+class Upload extends Action implements HttpPostActionInterface
 {
     /**
      * Property for Image Uploader
@@ -48,25 +51,17 @@ class Upload extends \Magento\Backend\App\Action implements HttpPostActionInterf
     /**
      * Save Image And Set Cookie
      *
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
      */
     public function execute()
     {
-
         $imageId = $this->_request->getParam('param_name', 'image');
-
         try {
             $result = $this->imageUploader->saveFileToTmpDir($imageId);
-            $result['cookie'] = [
-                'name' => $this->_getSession()->getName(),
-                'value' => $this->_getSession()->getSessionId(),
-                'lifetime' => $this->_getSession()->getCookieLifetime(),
-                'path' => $this->_getSession()->getCookiePath(),
-                'domain' => $this->_getSession()->getCookieDomain(),
-            ];
         } catch (\Exception $e) {
             $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
         }
+
         return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
     }
 }

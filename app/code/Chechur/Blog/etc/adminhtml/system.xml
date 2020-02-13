@@ -21,7 +21,7 @@
                 </field>
                 <field id="multiselect" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>blog_applied_to(Multiselect)</label>
-                    <source_model>Chechur\Blog\Model\Config\Multiselect</source_model>
+                    <source_model>Chechur\Blog\Model\Config\Config</source_model>
                 </field>
             </group>
         </section>

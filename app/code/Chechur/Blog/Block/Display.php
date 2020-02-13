@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Block;
 
-use Chechur\Blog\Model\Config\GetAvailableProductTypes;
+use Chechur\Blog\Model\Config\Config as GetAvailableProductTypes;
 use Chechur\Blog\Model\Post;
 use Chechur\Blog\Model\PostFactory;
+use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Theme\Block\Html\Pager;
 
 /**
  * Display blog.
@@ -44,9 +47,9 @@ class Display extends Template
     private $getAvailableProductTypes;
 
     /**
-     * @var Post[]
+     * @var Collection
      */
-    private $loadedBlogPosts;
+    private $postCollection;
 
     /**
      * @param Context $context
@@ -77,7 +80,7 @@ class Display extends Template
      *
      * @return string
      */
-    public function blog(): string
+    public function getBlockTitle(): string
     {
         return (string)__('Blog');
     }
@@ -89,24 +92,28 @@ class Display extends Template
      */
     public function getPostCollection(): array
     {
-        if ($this->loadedBlogPosts === null) {
-            $this->loadedBlogPosts = [];
-            /** @var ProductInterface $product */
-            $product = $this->registry->registry('current_product');
-            $productType = $product->getTypeId();
+        $postItems = [];
 
-            if ($product
-                && in_array($productType, $this->getAvailableProductTypes->execute(), true)
-            ) {
-                $blogCollection = $this->collectionFactory->create();
-                $blogCollection->addFieldToFilter('type', ['eq' => $productType])
-                    ->setOrder('created_at', 'ASC')
-                    ->setPageSize(5);
-                $this->loadedBlogPosts = $blogCollection->getItems();
-            }
+        if (null !== $this->postCollection && $this->postCollection->getSize()) {
+            $postItems = $this->postCollection->getItems();
         }
 
-        return $this->loadedBlogPosts;
+        return $postItems;
+    }
+
+    /**
+     * Retrieve image URL.
+     *
+     * @param string $image
+     * @return string
+     */
+    public function getImageUrl(string $image): string
+    {
+        $mediaUrl = $this->storeManager
+            ->getStore()
+            ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+
+        return $mediaUrl . 'post/tmp/image/' . $image;
     }
 
     /**
@@ -122,17 +129,48 @@ class Display extends Template
     }
 
     /**
-     * Retrieve image URL.
+     * Init pager block and item collection with page size and current page number.
      *
-     * @param string $image
-     * @return string
+     * @return $this
      */
-    public function getImageUrl(string $image): string
+    protected function _prepareLayout()
     {
-        $mediaUrl = $this->storeManager
-            ->getStore()
-            ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        $postCollection = $this->getBlogPostCollectionForCurrentProduct();
 
-        return $mediaUrl . 'post/tmp/image/' . $image;
+        if (null !== $postCollection) {
+            $this->postCollection = $postCollection;
+            /** @var Pager $pagerBlock */
+            $pagerBlock = $this->getChildBlock('blog.post.pager');
+            $pagerBlock->setLimit(5);
+            $pagerBlock->setCollection($this->postCollection);
+            $pagerBlock->setAvailableLimit([5]);
+            $pagerBlock->setShowAmounts($this->postCollection->getSize() > 5);
+        }
+
+        return parent::_prepareLayout();
+    }
+
+    /**
+     * Create collection filtered by current product type.
+     *
+     * @return Collection|null
+     */
+    private function getBlogPostCollectionForCurrentProduct(): ?Collection
+    {
+        $postCollection = null;
+
+        /** @var ProductInterface $product */
+        $product = $this->registry->registry('current_product');
+        $productType = $product->getTypeId();
+
+        if ($product
+            && in_array($productType, $this->getAvailableProductTypes->getAvailableProductTypes(), true)
+        ) {
+            $postCollection = $this->collectionFactory->create();
+            $postCollection->addFieldToFilter('type', ['eq' => $productType])
+                ->setOrder('created_at', 'ASC');
+        }
+
+        return $postCollection;
     }
 }

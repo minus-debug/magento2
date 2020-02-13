@@ -40,7 +40,7 @@ class NewAction extends Action implements HttpGetActionInterface
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Catalog::catalog_products');
-        $resultPage->getConfig()->getTitle()->prepend(__('Products'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Posts'));
 
         return $resultPage;
     }
