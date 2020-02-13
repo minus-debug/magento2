@@ -70,9 +70,11 @@ class DataProvider extends AbstractDataProvider
         foreach ($items as $action) {
             $this->loadedData[$action->getId()]['contact'] = $action->getData();
             if ($action->getImage()) {
-                $this->loadedData[$action->getId()]['contact']['image'] = [0 =>
-                    ['name' => $action->getImage(),
-                        'url' => $this->getMediaUrl() . $action->getImage()]
+                $this->loadedData[$action->getId()]['contact']['image'] = [
+                    [
+                        'name' => $action->getImage(),
+                        'url' => $this->getMediaUrl() . $action->getImage(),
+                    ],
                 ];
             }
         }
@@ -87,6 +89,7 @@ class DataProvider extends AbstractDataProvider
      */
     private function getMediaUrl(): string
     {
-        return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/tmp/image/';
+        return $this->storeManager->getStore()
+                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
     }
 }

@@ -10,7 +10,7 @@
         <div class="post-content">
             <div class="post-description clearfix">
                 <div class="post-text-hld">
-                    <?php foreach ($block->getPostCollection() as $post): ?>
+                    <?php foreach ($block->getPosts() as $post): ?>
                         <div class="post-content">
                             <h2 align="center"><?= $escaper->escapeHtml($post->getTheme()); ?></h2><br>
                             <?php if (!empty($post->getImage())): ?>

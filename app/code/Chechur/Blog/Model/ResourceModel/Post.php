@@ -13,15 +13,10 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 class Post extends AbstractDb
 {
     /**
-     * Table name
-     */
-    const MAIN_TABLE = 'chechur_blog_post';
-
-    /**
      * @inheritDoc
      */
     protected function _construct()
     {
-        $this->_init(self::MAIN_TABLE, PostInterface::FIELD_POST_ID);
+        $this->_init(PostInterface::MAIN_TABLE_NAME, PostInterface::FIELD_POST_ID);
     }
 }

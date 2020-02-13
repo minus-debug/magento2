@@ -5,7 +5,6 @@
     <preference for="Chechur\Blog\Api\Data\PostInterface" type="Chechur\Blog\Model\Post"/>
     <preference for="Chechur\Blog\Api\PostRepositoryInterface" type="Chechur\Blog\Model\PostRepository"/>
     <preference for="Chechur\Blog\Api\Data\PostSearchResultInterface" type="Chechur\Blog\Model\PostSearchResult"/>
-
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
@@ -15,7 +14,6 @@
             </argument>
         </arguments>
     </type>
-
     <virtualType name="Chechur\Blog\Model\ResourceModel\Post\Grid\Collection"
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
@@ -23,35 +21,10 @@
             <argument name="resourceModel" xsi:type="string">Chechur\Blog\Model\ResourceModel\Post</argument>
         </arguments>
     </virtualType>
-    <virtualType name="chechur_blog_post_listing_data_source"
-                 type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
-        <arguments>
-            <argument name="collection" xsi:type="object" shared="false">
-                Chechur\Blog\Model\ResourceModel\Post\Collection
-            </argument>
-            <argument name="filterPool" xsi:type="object" shared="false">chechur_blog_post_listing_data_source
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="chechur_blog_post_listing_data_source"
-                 type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
-        <arguments>
-            <argument name="appliers" xsi:type="array">
-                <item name="regular" xsi:type="object">
-                    Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter
-                </item>
-                <item name="fulltext" xsi:type="object">
-                    Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter
-                </item>
-            </argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="Chechur\Blog\Model\PostImageUploader" type="Magento\Catalog\Model\ImageUploader">
         <arguments>
-            <argument name="baseTmpPath" xsi:type="string">post/tmp/image</argument>
-            <argument name="basePath" xsi:type="string">post/image</argument>
+            <argument name="baseTmpPath" xsi:type="string">catalog/product/post/tmp/image</argument>
+            <argument name="basePath" xsi:type="string">catalog/product/post/image</argument>
             <argument name="allowedExtensions" xsi:type="array">
                 <item name="jpg" xsi:type="string">jpg</item>
                 <item name="jpeg" xsi:type="string">jpeg</item>
@@ -67,6 +40,11 @@
         </arguments>
     </virtualType>
     <type name="Chechur\Blog\Controller\Adminhtml\Image\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Chechur\Blog\Model\PostImageUploader</argument>
+        </arguments>
+    </type>
+    <type name="Chechur\Blog\Controller\Adminhtml\Post\Save">
         <arguments>
             <argument name="imageUploader" xsi:type="object">Chechur\Blog\Model\PostImageUploader</argument>
         </arguments>

@@ -58,7 +58,7 @@ class Image extends Column
         if (isset($dataSource['data']['items'])) {
             $path = $this->storeManager
                     ->getStore()
-                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/tmp/image/';
+                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
             $baseImage = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
             foreach ($dataSource['data']['items'] as & $item) {
                 if ($item['image']) {

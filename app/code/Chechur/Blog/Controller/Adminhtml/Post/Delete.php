@@ -62,10 +62,8 @@ class Delete extends Action implements HttpGetActionInterface
         try {
             $this->postRepositoryInterface->deleteById($id);
             $this->messageManager->addSuccessMessage(__('Your post has been deleted !'));
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('Error while trying to delete post'));
-        } catch (StateException $e) {
-            $this->messageManager->addErrorMessage(__('Sumething when wrong during process post'));
+        } catch (NoSuchEntityException|StateException $e) {
+            $this->messageManager->addErrorMessage(__('Error while trying to delete post with ID: %1', $id));
         }
 
         return $resultRedirect->setPath('*/*/index', ['_current' => true]);

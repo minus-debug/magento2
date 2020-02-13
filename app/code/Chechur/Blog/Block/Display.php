@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Block;
 
-use Chechur\Blog\Model\Config\Config as GetAvailableProductTypes;
+use Chechur\Blog\Model\Config\PostConfigData;
 use Chechur\Blog\Model\Post;
 use Chechur\Blog\Model\PostFactory;
 use Chechur\Blog\Model\ResourceModel\Post\Collection;
@@ -42,14 +42,14 @@ class Display extends Template
     private $storeManager;
 
     /**
-     * @var GetAvailableProductTypes
-     */
-    private $getAvailableProductTypes;
-
-    /**
      * @var Collection
      */
     private $postCollection;
+
+    /**
+     * @var PostConfigData
+     */
+    private $postConfigData;
 
     /**
      * @param Context $context
@@ -57,7 +57,7 @@ class Display extends Template
      * @param CollectionFactory $collectionFactory
      * @param Registry $registry
      * @param StoreManagerInterface $storeManager
-     * @param GetAvailableProductTypes $getAvailableProductTypes
+     * @param PostConfigData $postConfigData
      */
     public function __construct(
         Context $context,
@@ -65,14 +65,14 @@ class Display extends Template
         CollectionFactory $collectionFactory,
         Registry $registry,
         StoreManagerInterface $storeManager,
-        GetAvailableProductTypes $getAvailableProductTypes
+        PostConfigData $postConfigData
     ) {
         parent::__construct($context);
         $this->storeManager = $storeManager;
         $this->registry = $registry;
         $this->collectionFactory = $collectionFactory;
         $this->postFactory = $postFactory;
-        $this->getAvailableProductTypes = $getAvailableProductTypes;
+        $this->postConfigData = $postConfigData;
     }
 
     /**
@@ -90,7 +90,7 @@ class Display extends Template
      *
      * @return Post[]
      */
-    public function getPostCollection(): array
+    public function getPosts(): array
     {
         $postItems = [];
 
@@ -113,7 +113,7 @@ class Display extends Template
             ->getStore()
             ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
 
-        return $mediaUrl . 'post/tmp/image/' . $image;
+        return $mediaUrl . 'catalog/product/post/image/' . $image;
     }
 
     /**
@@ -121,7 +121,9 @@ class Display extends Template
      */
     protected function _toHtml()
     {
-        if (!empty($this->getPostCollection())) {
+        if ($this->postConfigData->isPostsEnabled()
+            && !empty($this->getPosts())
+        ) {
             return parent::_toHtml();
         }
 
@@ -164,7 +166,7 @@ class Display extends Template
         $productType = $product->getTypeId();
 
         if ($product
-            && in_array($productType, $this->getAvailableProductTypes->getAvailableProductTypes(), true)
+            && in_array($productType, $this->postConfigData->getAvailableProductTypes(), true)
         ) {
             $postCollection = $this->collectionFactory->create();
             $postCollection->addFieldToFilter('type', ['eq' => $productType])

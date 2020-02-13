@@ -9,6 +9,8 @@ namespace Chechur\Blog\Api\Data;
  */
 interface PostInterface
 {
+    public const MAIN_TABLE_NAME = 'chechur_blog_post';
+
     /**
      * Table field names.
      */
