@@ -4,7 +4,6 @@
 
     <preference for="Chechur\Blog\Api\Data\PostInterface" type="Chechur\Blog\Model\Post"/>
     <preference for="Chechur\Blog\Api\PostRepositoryInterface" type="Chechur\Blog\Model\PostRepository"/>
-    <preference for="Chechur\Blog\Api\Data\PostSearchResultInterface" type="Chechur\Blog\Model\PostSearchResult"/>
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">

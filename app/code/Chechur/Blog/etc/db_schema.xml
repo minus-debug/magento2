@@ -5,7 +5,7 @@
     <table name="chechur_blog_post" resource="default" engine="innodb" comment="List of data/schema patches">
         <column xsi:type="int" name="post_id" identity="true" comment="Post Id"/>
         <column xsi:type="varchar" name="theme" length="1024" nullable="false" comment="Post Theme"/>
-        <column xsi:type="varchar" name="type" length="255" nullable="false" comment="Post Type"/>
+        <column xsi:type="varchar" name="type" length="255" nullable="false" comment="Posts product type"/>
         <column xsi:type="text" name="post_content" nullable="false" comment="Post Content"/>
         <column xsi:type="text" name="image" nullable="false" comment="Post Image"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"

@@ -7,16 +7,17 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Model;
 
-use Chechur\Blog\Api\PostRepositoryInterface;
 use Chechur\Blog\Api\Data\PostInterface;
-use Chechur\Blog\Api\Data\PostSearchResultInterface;
-use Chechur\Blog\Api\Data\PostSearchResultInterfaceFactory;
+use Chechur\Blog\Api\Data\PostInterfaceFactory;
+use Chechur\Blog\Api\PostRepositoryInterface;
 use Chechur\Blog\Model\ResourceModel\Post as PostResourceModel;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\StateException;
 
 /**
  * @inheritDoc
@@ -30,7 +31,7 @@ class PostRepository implements PostRepositoryInterface
     private $postResource;
 
     /**
-     * @var PostFactory
+     * @var PostInterfaceFactory
      */
     private $postFactory;
 
@@ -45,29 +46,29 @@ class PostRepository implements PostRepositoryInterface
     private $collectionFactory;
 
     /**
-     * @var PostSearchResultInterfaceFactory
+     * @var SearchResultsInterfaceFactory
      */
-    private $postSearchResultFactory;
+    private $searchResultFactory;
 
     /**
      * @param PostResourceModel $postResource
      * @param PostFactory $postFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param PostResourceModel\CollectionFactory $collectionFactory
-     * @param PostSearchResultInterfaceFactory $postSearchResultFactory
+     * @param SearchResultsInterfaceFactory $searchResultFactory
      */
     public function __construct(
         PostResourceModel $postResource,
-        PostFactory $postFactory,
+        PostInterfaceFactory $postFactory,
         CollectionProcessorInterface $collectionProcessor,
         PostResourceModel\CollectionFactory $collectionFactory,
-        PostSearchResultInterfaceFactory $postSearchResultFactory
+        SearchResultsInterfaceFactory $searchResultFactory
     ) {
         $this->postResource = $postResource;
         $this->postFactory = $postFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->collectionFactory = $collectionFactory;
-        $this->postSearchResultFactory = $postSearchResultFactory;
+        $this->searchResultFactory = $searchResultFactory;
     }
 
     /**
@@ -109,7 +110,7 @@ class PostRepository implements PostRepositoryInterface
         try {
             $this->postResource->delete($blogPost);
         } catch (\Exception $e) {
-            throw new StateException(__("The post with ID: %1 couldn't be removed.", $blogPostId));
+            throw new CouldNotDeleteException(__("The post with ID: %1 couldn't be removed.", $blogPostId));
         }
     }
 
@@ -125,11 +126,11 @@ class PostRepository implements PostRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): PostSearchResultInterface
+    public function getList(SearchCriteriaInterface $searchCriteria): SearchResultsInterface
     {
         $postCollection = $this->collectionFactory->create();
         $this->collectionProcessor->process($searchCriteria, $postCollection);
-        $searchResult = $this->postSearchResultFactory->create();
+        $searchResult = $this->searchResultFactory->create();
         $searchResult->setItems($postCollection->getItems());
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setTotalCount($postCollection->getSize());

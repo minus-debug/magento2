@@ -56,21 +56,38 @@ class Image extends Column
     public function prepareDataSource(array $dataSource): array
     {
         if (isset($dataSource['data']['items'])) {
-            $path = $this->storeManager
-                    ->getStore()
-                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
-            $baseImage = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
+
             foreach ($dataSource['data']['items'] as & $item) {
                 if ($item['image']) {
-                    $item['image' . '_src'] = $path . $item['image'];
-                    $item['image' . '_orig_src'] = $path . $item['image'];
+                    $item['image' . '_src'] = $this->getPostImage($item['image']);
+                    $item['image' . '_orig_src'] = $this->getPostImage($item['image']);
                 } else {
-                    $item['image' . '_src'] = $baseImage;
-                    $item['image' . '_orig_src'] = $baseImage;
+                    $item['image' . '_src'] = $this->getPostImage($item['image']);
+                    $item['image' . '_orig_src'] = $this->getPostImage($item['image']);
                 }
             }
         }
 
         return $dataSource;
+    }
+
+    /**
+     * Get media path for image.
+     *
+     * @param string $image
+     * @return string
+     */
+    private function getPostImage(string $image): string
+    {
+        $result = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
+        $path = $this->storeManager
+                ->getStore()
+                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
+
+        if (!empty($image)) {
+            $result = $path . $image;
+        }
+
+        return $result;
     }
 }

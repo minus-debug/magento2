@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Api;
 
+use Chechur\Blog\Api\Data\PostInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+
 /**
  * Blog post repository interface. Contains method for operation with blog post entity.
  */
@@ -12,47 +19,47 @@ interface PostRepositoryInterface
     /**
      * Save provided blog post entity.
      *
-     * @param \Chechur\Blog\Api\Data\PostInterface $blogPost
-     * @return \Chechur\Blog\Api\Data\PostInterface
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @param PostInterface $blogPost
+     * @return PostInterface
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
      */
-    public function save(\Chechur\Blog\Api\Data\PostInterface $blogPost): \Chechur\Blog\Api\Data\PostInterface;
+    public function save(PostInterface $blogPost): PostInterface;
 
     /**
      * Return blog post entity.
      *
      * @param int $blogPostId
-     * @return \Chechur\Blog\Api\Data\PostInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return PostInterface
+     * @throws NoSuchEntityException
      */
-    public function get(int $blogPostId): \Chechur\Blog\Api\Data\PostInterface;
+    public function get(int $blogPostId): PostInterface;
 
     /**
      * Delete provided blog post entity.
      *
-     * @param \Chechur\Blog\Api\Data\PostInterface $blogPost
+     * @param PostInterface $blogPost
      * @return void
-     * @throws \Magento\Framework\Exception\StateException
+     * @throws CouldNotDeleteException
      */
-    public function delete(\Chechur\Blog\Api\Data\PostInterface $blogPost): void;
+    public function delete(PostInterface $blogPost): void;
 
     /**
      * Get blog post by provided id and delete it.
      *
      * @param int $blogPostId
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\StateException
+     * @throws NoSuchEntityException
+     * @throws CouldNotDeleteException
      */
     public function deleteById(int $blogPostId): void;
 
     /**
      * Get blog post list by provided search criteria.
      *
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Chechur\Blog\Api\Data\PostSearchResultInterface
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return SearchResultsInterface
      */
     public function getList(
-        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-    ): \Chechur\Blog\Api\Data\PostSearchResultInterface;
+        SearchCriteriaInterface $searchCriteria
+    ): SearchResultsInterface;
 }

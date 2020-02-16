@@ -68,9 +68,9 @@ class DataProvider extends AbstractDataProvider
         $items = $this->collection->getItems();
 
         foreach ($items as $action) {
-            $this->loadedData[$action->getId()]['contact'] = $action->getData();
+            $this->loadedData[$action->getId()]['blog'] = $action->getData();
             if ($action->getImage()) {
-                $this->loadedData[$action->getId()]['contact']['image'] = [
+                $this->loadedData[$action->getId()]['blog']['image'] = [
                     [
                         'name' => $action->getImage(),
                         'url' => $this->getMediaUrl() . $action->getImage(),

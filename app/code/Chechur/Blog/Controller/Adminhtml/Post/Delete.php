@@ -6,26 +6,25 @@ namespace Chechur\Blog\Controller\Adminhtml\Post;
 use Chechur\Blog\Api\PostRepositoryInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\StateException;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
  * Class Delete Post From Data
  */
-class Delete extends Action implements HttpGetActionInterface
+class Delete extends Action implements HttpPostActionInterface
 {
-
-    const ADMIN_RESOURCE = 'Post';
+    const ADMIN_RESOURCE = 'Chechur_Blog::post';
 
     /**
      * @var PageFactory
      */
-    protected $resultPageFactory;
+    private $resultPageFactory;
 
     /**
      * @var PostRepositoryInterface
@@ -50,7 +49,7 @@ class Delete extends Action implements HttpGetActionInterface
     }
 
     /**
-     * Method delete from data
+     * Delete post action.
      *
      * @return ResponseInterface|Redirect|ResultInterface
      */
@@ -58,14 +57,18 @@ class Delete extends Action implements HttpGetActionInterface
     {
         $id = (int)$this->getRequest()->getParam('id');
         $resultRedirect = $this->resultRedirectFactory->create();
+        $redirect = ['*/*/index', ['_current' => true]];
 
         try {
             $this->postRepositoryInterface->deleteById($id);
             $this->messageManager->addSuccessMessage(__('Your post has been deleted !'));
-        } catch (NoSuchEntityException|StateException $e) {
+        } catch (NoSuchEntityException $e) {
             $this->messageManager->addErrorMessage(__('Error while trying to delete post with ID: %1', $id));
+        } catch (CouldNotDeleteException $e) {
+            $this->messageManager->addErrorMessage(__('Something when wrong during process delete post ID: %1', $id));
+            $redirect = ['*/*/edit', ['_current' => true, 'id' => $id]];
         }
 
-        return $resultRedirect->setPath('*/*/index', ['_current' => true]);
+        return $resultRedirect->setPath(...$redirect);
     }
 }

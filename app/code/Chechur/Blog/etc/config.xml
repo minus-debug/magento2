@@ -4,7 +4,6 @@
         <blog>
             <general>
                 <enable>1</enable>
-                <multiselect><![CDATA[]]></multiselect>
             </general>
         </blog>
     </default>

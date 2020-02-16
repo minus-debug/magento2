@@ -6,7 +6,7 @@ namespace Chechur\Blog\Block\Adminhtml\Post\Edit;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Save blog post form data.
+ * Button for create blog post.
  */
 class SaveButton extends GenericButton implements ButtonProviderInterface
 {
@@ -22,7 +22,7 @@ class SaveButton extends GenericButton implements ButtonProviderInterface
                 'mage-init' => ['button' => ['event' => 'save']],
                 'form-role' => 'save',
             ],
-            'sort_order' => 90,
+            'sort_order' => 10,
         ];
     }
 }

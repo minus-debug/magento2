@@ -6,7 +6,7 @@
             <item name="provider" xsi:type="string">chechur_blog_post_form.chechur_blog_post_form_data_source</item>
             <item name="deps" xsi:type="string">chechur_blog_post_form.chechur_blog_post_form_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">Sample Form</item>
+        <item name="label" xsi:type="string" translate="true">Post form</item>
         <item name="layout" xsi:type="array">
             <item name="type" xsi:type="string">tabs</item>
         </item>
@@ -29,7 +29,7 @@
             <argument name="class" xsi:type="string">Chechur\Blog\Model\Post\DataProvider</argument>
             <argument name="name" xsi:type="string">chechur_blog_post_form_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">post_id</argument>
-            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">post_id</argument>
         </argument>
         <argument name="data" xsi:type="array">
             <item name="js_config" xsi:type="array">
@@ -40,10 +40,10 @@
             <submitUrl path="chechur_blog/post/save"/>
         </settings>
     </dataSource>
-    <fieldset name="contact">
+    <fieldset name="blog">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Sample Fieldset</item>
+                <item name="label" xsi:type="string" translate="true">Post main data</item>
             </item>
         </argument>
         <!-- This field represents form id and is hidden -->
@@ -53,7 +53,7 @@
                     <item name="visible" xsi:type="boolean">false</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">contact</item>
+                    <item name="source" xsi:type="string">blog</item>
                 </item>
             </argument>
         </field>
@@ -65,18 +65,18 @@
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">contact</item>
+                    <item name="source" xsi:type="string">blog</item>
                 </item>
             </argument>
         </field>
         <field name="type">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Chechur\Blog\Model\Source\ProductTypes</item>
+                <item name="options" xsi:type="object">Magento\Catalog\Model\Product\Type</item>
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Type</item>
                     <item name="formElement" xsi:type="string">select</item>
-                    <item name="source" xsi:type="string">contact</item>
+                    <item name="source" xsi:type="string">blog</item>
                     <item name="dataScope" xsi:type="string">type</item>
                     <item name="default" xsi:type="string">0</item>
                     <item name="validation" xsi:type="array">
@@ -93,7 +93,7 @@
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">contact</item>
+                    <item name="source" xsi:type="string">blog</item>
                 </item>
             </argument>
         </field>
@@ -101,44 +101,16 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">string</item>
-                    <item name="source" xsi:type="string">contact</item>
+                    <item name="source" xsi:type="string">blog</item>
                     <item name="label" xsi:type="string" translate="true">Image</item>
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="formElement" xsi:type="string">fileUploader</item>
                     <item name="elementTmpl" xsi:type="string">ui/form/element/uploader/uploader</item>
-                    <item name="previewTmpl" xsi:type="string">Chechur_Blog/image-preview</item>
+                    <item name="previewTmpl" xsi:type="string">Magento_Catalog/image-preview</item>
                     <item name="required" xsi:type="boolean">false</item>
                     <item name="sortOrder" xsi:type="number">40</item>
                     <item name="uploaderConfig" xsi:type="array">
                         <item name="url" xsi:type="url" path="chechur_blog/image/upload"/>
-                    </item>
-                </item>
-            </argument>
-        </field>
-        <field name="created_at">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">string</item>
-                    <item name="label" xsi:type="string" translate="true">Go Live Start Date</item>
-                    <item name="formElement" xsi:type="string">date</item>
-                    <item name="source" xsi:type="string">page</item>
-                    <item name="sortOrder" xsi:type="number">21</item>
-                    <item name="dataScope" xsi:type="string">contact</item>
-                    <item name="validation" xsi:type="array">
-                    </item>
-                </item>
-            </argument>
-        </field>
-        <field name="updated_at">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">string</item>
-                    <item name="label" xsi:type="string" translate="true">Go Live Update Date</item>
-                    <item name="formElement" xsi:type="string">date</item>
-                    <item name="source" xsi:type="string">page</item>
-                    <item name="sortOrder" xsi:type="number">21</item>
-                    <item name="dataScope" xsi:type="string">contact</item>
-                    <item name="validation" xsi:type="array">
                     </item>
                 </item>
             </argument>

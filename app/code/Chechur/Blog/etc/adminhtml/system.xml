@@ -11,14 +11,15 @@
             <resource>Chechur_Blog::blog_config</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>General Configuration</label>
-                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="enable" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Is enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Is posts will be render on front.</comment>
                 </field>
-                <field id="multiselect" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>blog_applied_to(Multiselect)</label>
-                    <source_model>Chechur\Blog\Model\Source\ProductTypes</source_model>
+                <field id="block_applied_to" translate="label comment" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Available product types(Multiselect)</label>
+                    <source_model>Magento\Catalog\Model\Product\Type</source_model>
+                    <comment>Select the product type (s) in which the posts will appear</comment>
                 </field>
             </group>
         </section>

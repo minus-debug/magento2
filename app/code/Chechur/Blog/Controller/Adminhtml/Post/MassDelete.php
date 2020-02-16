@@ -8,6 +8,9 @@ use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Ui\Component\MassAction\Filter;
 
 /**
@@ -15,7 +18,6 @@ use Magento\Ui\Component\MassAction\Filter;
  */
 class MassDelete extends Action implements HttpPostActionInterface
 {
-
     /**
      * @var Filter
      */
@@ -50,25 +52,31 @@ class MassDelete extends Action implements HttpPostActionInterface
     }
 
     /**
-     * Delete items and redirect to grid
+     * Delete items and redirect to grid.
      *
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     * @return Redirect
      */
     public function execute()
     {
+        $resultRedirect = $this->resultRedirectFactory->create();
         try {
             $logCollection = $this->filter->getCollection($this->collectionFactory->create());
-            $itemsDeleted = 0;
-
+            $itemsDeleted = $itemsDeletedError = 0;
             foreach ($logCollection as $item) {
-                $this->postRepository->delete($item);
-                $itemsDeleted++;
+                try {
+                    $this->postRepository->delete($item);
+                    $itemsDeleted++;
+                } catch (CouldNotDeleteException $e) {
+                    $itemsDeletedError++;
+                }
+            }
+            if (!empty($itemsDeletedError)) {
+                $this->messageManager->addErrorMessage(__('%1 posts not can deleted', $itemsDeletedError));
             }
             $this->messageManager->addSuccessMessage(__('A total of %1 Post(s) were deleted.', $itemsDeleted));
-        } catch (\Exception $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage(__('Something went wrong during delete posts.'));
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
 
         return $resultRedirect->setPath('chechur_blog/post');
     }

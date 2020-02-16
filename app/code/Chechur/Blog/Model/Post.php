@@ -52,7 +52,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setPostId(?int $postId): PostInterface
     {
-        $this->setId($postId);
+        $this->setData(PostInterface::FIELD_POST_ID, $postId);
 
         return $this;
     }
@@ -62,7 +62,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function getPostId(): ?int
     {
-        return $this->getId() ? (int)$this->getId() : null;
+        return $this->getData(PostInterface::FIELD_POST_ID) ? (int)$this->getData(PostInterface::FIELD_POST_ID) : null;
     }
 
     /**

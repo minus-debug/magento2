@@ -22,7 +22,7 @@ class Save extends Action implements HttpPostActionInterface
     /**
      * Constanta admin resource
      */
-    const ADMIN_RESOURCE = 'Post';
+    const ADMIN_RESOURCE = 'Chechur_Blog::post';
 
     /**
      * @var DataObjectHelper
@@ -75,10 +75,15 @@ class Save extends Action implements HttpPostActionInterface
         $redirect = $this->resultRedirectFactory->create();
 
         try {
-            $saveData = $this->getDataToSave();
-            $blogPostId = $saveData[PostInterface::FIELD_POST_ID];
-            $blogToSave = $blogPostId ? $this->postRepository->get($blogPostId) : $this->postFactory->create();
-            $this->dataObjectHelper->populateWithArray($blogToSave, $saveData, PostInterface::class);
+            $blogPostData = $this->getRequest()->getPostValue('blog');
+            if (null === $blogPostData) {
+                throw new LocalizedException(__('Please specify data to save.'));
+            }
+            $blogPostData[PostInterface::FIELD_IMAGE] = isset($blogPostData[PostInterface::FIELD_IMAGE])
+                ? $blogPostData[PostInterface::FIELD_IMAGE][0]['name'] : '';
+            $blogPostId = $blogPostData[PostInterface::FIELD_POST_ID] ?? null;
+            $blogToSave = $blogPostId ? $this->postRepository->get((int)$blogPostId) : $this->postFactory->create();
+            $this->dataObjectHelper->populateWithArray($blogToSave, $blogPostData, PostInterface::class);
             $this->postRepository->save($blogToSave);
             $this->saveImageToBasePostDir($blogToSave->getImage());
             $this->messageManager->addSuccessMessage(__('You successfully saved the news.'));
@@ -90,35 +95,6 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
-     * Build data to save from post data.
-     *
-     * @return array
-     * @throws LocalizedException
-     */
-    private function getDataToSave(): array
-    {
-        $contactData = $this->getRequest()->getParam('contact');
-
-        if (null === $contactData) {
-            throw new LocalizedException(__('Please specify data to save.'));
-        }
-        $blogPostId = !empty($contactData[PostInterface::FIELD_POST_ID])
-            ? (int)$contactData[PostInterface::FIELD_POST_ID] : null;
-        $imageName = isset($contactData[PostInterface::FIELD_IMAGE])
-            ? $contactData[PostInterface::FIELD_IMAGE][0]['name'] : '';
-
-        return [
-            PostInterface::FIELD_POST_ID => $blogPostId,
-            PostInterface::FIELD_THEME => $contactData[PostInterface::FIELD_THEME] ?? '',
-            PostInterface::FIELD_POST_CONTENT => $contactData[PostInterface::FIELD_POST_CONTENT] ?? '',
-            PostInterface::FIELD_IMAGE => $imageName,
-            PostInterface::FIELD_TYPE => $contactData[PostInterface::FIELD_TYPE] ?? '',
-            PostInterface::FIELD_UPDATED_AT => $contactData[PostInterface::FIELD_UPDATED_AT] ?? '',
-            PostInterface::FIELD_CREATED_AT => $contactData[PostInterface::FIELD_CREATED_AT] ?? '',
-        ];
-    }
-
-    /**
      * Move image from tmp dir to base post images dir.
      *
      * @param string $imageName
@@ -126,10 +102,10 @@ class Save extends Action implements HttpPostActionInterface
      */
     private function saveImageToBasePostDir(string $imageName): void
     {
-        $contactData = $this->getRequest()->getParam('contact');
+        $blogPostData = $this->getRequest()->getPostValue('blog');
 
         if ($imageName
-            && isset($contactData[PostInterface::FIELD_IMAGE][0]['tmp_name'])
+            && isset($blogPostData[PostInterface::FIELD_IMAGE][0]['tmp_name'])
         ) {
             try {
                 $this->imageUploader->moveFileFromTmp($imageName);

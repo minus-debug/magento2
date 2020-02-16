@@ -10,6 +10,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class Upload image to tmp dir
@@ -21,11 +22,9 @@ class Upload extends Action implements HttpPostActionInterface
      *
      * @var ImageUploader
      */
-    public $imageUploader;
+    private $imageUploader;
 
     /**
-     * Constract Upload
-     *
      * @param Context $context
      * @param ImageUploader $imageUploader
      */
@@ -38,18 +37,7 @@ class Upload extends Action implements HttpPostActionInterface
     }
 
     /**
-     * Checker
-     *
-     * @return bool
-     */
-    public function _isAllowed(): bool
-    {
-        return $this->_authorization->isAllowed('Chechur_blog::image_read') ||
-            $this->_authorization->isAllowed('Chechur_blog::image_create');
-    }
-
-    /**
-     * Save Image And Set Cookie
+     * Upload post image.
      *
      * @return ResponseInterface|ResultInterface
      */
@@ -58,10 +46,21 @@ class Upload extends Action implements HttpPostActionInterface
         $imageId = $this->_request->getParam('param_name', 'image');
         try {
             $result = $this->imageUploader->saveFileToTmpDir($imageId);
-        } catch (\Exception $e) {
+        } catch (LocalizedException $e) {
             $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
         }
 
         return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
+    }
+
+    /**
+     * Check permission to view or create image for posts.
+     *
+     * @return bool
+     */
+    protected function _isAllowed(): bool
+    {
+        return $this->_authorization->isAllowed('Chechur_blog::image_read') ||
+            $this->_authorization->isAllowed('Chechur_blog::image_create');
     }
 }

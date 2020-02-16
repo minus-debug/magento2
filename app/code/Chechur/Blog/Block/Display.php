@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Block;
 
+use Chechur\Blog\Api\Data\PostInterface;
+use Chechur\Blog\Api\Data\PostInterfaceFactory;
 use Chechur\Blog\Model\Config\PostConfigData;
 use Chechur\Blog\Model\Post;
-use Chechur\Blog\Model\PostFactory;
 use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -22,7 +23,7 @@ use Magento\Theme\Block\Html\Pager;
 class Display extends Template
 {
     /**
-     * @var PostFactory
+     * @var PostInterfaceFactory
      */
     private $postFactory;
 
@@ -52,8 +53,13 @@ class Display extends Template
     private $postConfigData;
 
     /**
+     * @var Post[]
+     */
+    private $loadedPostItems;
+
+    /**
      * @param Context $context
-     * @param PostFactory $postFactory
+     * @param PostInterfaceFactory $postFactory
      * @param CollectionFactory $collectionFactory
      * @param Registry $registry
      * @param StoreManagerInterface $storeManager
@@ -61,7 +67,7 @@ class Display extends Template
      */
     public function __construct(
         Context $context,
-        PostFactory $postFactory,
+        PostInterfaceFactory $postFactory,
         CollectionFactory $collectionFactory,
         Registry $registry,
         StoreManagerInterface $storeManager,
@@ -92,13 +98,15 @@ class Display extends Template
      */
     public function getPosts(): array
     {
-        $postItems = [];
+        if (null === $this->loadedPostItems) {
+            $this->loadedPostItems = [];
 
-        if (null !== $this->postCollection && $this->postCollection->getSize()) {
-            $postItems = $this->postCollection->getItems();
+            if (null !== $this->postCollection && $this->postCollection->getSize()) {
+                $this->loadedPostItems = $this->postCollection->getItems();
+            }
         }
 
-        return $postItems;
+        return $this->loadedPostItems;
     }
 
     /**
@@ -117,17 +125,13 @@ class Display extends Template
     }
 
     /**
-     * @inheritDoc
+     * Check is posts enabled
+     *
+     * @return bool
      */
-    protected function _toHtml()
+    public function checkPostsEnabled(): bool
     {
-        if ($this->postConfigData->isPostsEnabled()
-            && !empty($this->getPosts())
-        ) {
-            return parent::_toHtml();
-        }
-
-        return '';
+        return (bool)$this->postConfigData->isPostsEnabled();
     }
 
     /**
@@ -169,8 +173,8 @@ class Display extends Template
             && in_array($productType, $this->postConfigData->getAvailableProductTypes(), true)
         ) {
             $postCollection = $this->collectionFactory->create();
-            $postCollection->addFieldToFilter('type', ['eq' => $productType])
-                ->setOrder('created_at', 'ASC');
+            $postCollection->addFieldToFilter(PostInterface::FIELD_TYPE, ['eq' => $productType])
+                ->setOrder(PostInterface::FIELD_CREATED_AT, Collection::SORT_ORDER_DESC);
         }
 
         return $postCollection;

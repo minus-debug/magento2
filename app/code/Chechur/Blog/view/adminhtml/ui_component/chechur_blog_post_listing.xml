@@ -88,9 +88,6 @@
                             chechur_blog_post_listing.chechur_blog_post_listing.listing_top.bookmarks
                         </item>
                         <item name="root" xsi:type="string">columns.${ $.index }</item>
-                        <!-- ${ $.index } means the current column index -->
-                        <!-- ${ $.storageConfig.root }: It is referring to root property of current storageConfig
-                            that you previously defined as ${ $.index }.so, at the end it should take the same value as ${ $.index} -->
                         <item name="namespace" xsi:type="string">current.${ $.storageConfig.root}</item>
                     </item>
                 </item>
@@ -201,10 +198,12 @@
                 </item>
             </argument>
         </column>
-        <actionsColumn name="actions" class="Chechur\Blog\Ui\Component\Listing\Column\ActionsColumn">
-            <settings>
-                <label translate="true">ActionColumn</label>
-            </settings>
+        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="50">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="editUrlPath" xsi:type="string">chechur_blog/post/edit</item>
+                </item>
+            </argument>
         </actionsColumn>
     </columns>
 </listing>

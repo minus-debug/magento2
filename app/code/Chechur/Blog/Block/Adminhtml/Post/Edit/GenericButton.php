@@ -15,12 +15,12 @@ class GenericButton
     /**
      * @var Context
      */
-    protected $context;
+    private $context;
 
     /**
      * @var AuthorizationInterface
      */
-    protected $authorization;
+    private $authorization;
 
     /**
      * @param Context $context

@@ -12,7 +12,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 class PostConfigData
 {
     public const IS_POSTS_ENABLED_CONFIG_PATH = 'blog/general/enable';
-    public const ENABLED_PRODUCT_TYPES_CONFIG_PATH = 'blog/general/multiselect';
+    public const ENABLED_PRODUCT_TYPES_CONFIG_PATH = 'blog/general/block_applied_to';
 
     /**
      * @var ScopeConfigInterface
@@ -35,7 +35,7 @@ class PostConfigData
      */
     public function isPostsEnabled(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::IS_POSTS_ENABLED_CONFIG_PATH);
+        return (bool)$this->scopeConfig->isSetFlag(self::IS_POSTS_ENABLED_CONFIG_PATH);
     }
 
     /**
