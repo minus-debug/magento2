@@ -129,7 +129,7 @@ class Display extends Template
      *
      * @return bool
      */
-    public function checkPostsEnabled(): bool
+    public function isPostsEnabled(): bool
     {
         return (bool)$this->postConfigData->isPostsEnabled();
     }

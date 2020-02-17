@@ -10,7 +10,7 @@ use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Class Edit redirected to save class
+ * Edit Blog post action.
  */
 class Edit extends Action implements HttpGetActionInterface
 {
@@ -37,7 +37,7 @@ class Edit extends Action implements HttpGetActionInterface
     }
 
     /**
-     * Redirect to save class
+     * Edit Blog post
      *
      * @return Page
      */

@@ -11,8 +11,11 @@ use Magento\Backend\App\Action\Context;
 use Magento\Catalog\Model\ImageUploader;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class Save saved item to data
@@ -45,24 +48,32 @@ class Save extends Action implements HttpPostActionInterface
     private $imageUploader;
 
     /**
+     * @var DataPersistorInterface
+     */
+    protected $dataPersistor;
+
+    /**
      * @param Context $context
      * @param DataObjectHelper $dataObjectHelper
      * @param PostInterfaceFactory $postFactory
      * @param PostRepositoryInterface $postRepository
      * @param ImageUploader $imageUploader
+     * @param DataPersistorInterface $dataPersistor
      */
     public function __construct(
         Context $context,
         DataObjectHelper $dataObjectHelper,
         PostInterfaceFactory $postFactory,
         PostRepositoryInterface $postRepository,
-        ImageUploader $imageUploader
+        ImageUploader $imageUploader,
+        DataPersistorInterface $dataPersistor
     ) {
         parent::__construct($context);
         $this->dataObjectHelper = $dataObjectHelper;
         $this->postFactory = $postFactory;
         $this->postRepository = $postRepository;
         $this->imageUploader = $imageUploader;
+        $this->dataPersistor = $dataPersistor;
     }
 
     /**
@@ -73,45 +84,56 @@ class Save extends Action implements HttpPostActionInterface
     public function execute(): ResultInterface
     {
         $redirect = $this->resultRedirectFactory->create();
-
+        $pathToRedirect = ['*/*/index', ['_current' => true]];
+        $blogPostData = $this->getRequest()->getPostValue('blog');
+        if (null === $blogPostData) {
+            $this->messageManager->addErrorMessage(__('Data to save is not specified.'));
+            return $redirect->setPath(...$pathToRedirect);
+        }
         try {
-            $blogPostData = $this->getRequest()->getPostValue('blog');
-            if (null === $blogPostData) {
-                throw new LocalizedException(__('Please specify data to save.'));
-            }
-            $blogPostData[PostInterface::FIELD_IMAGE] = isset($blogPostData[PostInterface::FIELD_IMAGE])
-                ? $blogPostData[PostInterface::FIELD_IMAGE][0]['name'] : '';
             $blogPostId = $blogPostData[PostInterface::FIELD_POST_ID] ?? null;
+            $blogPostData[PostInterface::FIELD_IMAGE] = $this->getImageName();
             $blogToSave = $blogPostId ? $this->postRepository->get((int)$blogPostId) : $this->postFactory->create();
+            $this->dataPersistor->set('chechur_blog_post', $blogPostData);
             $this->dataObjectHelper->populateWithArray($blogToSave, $blogPostData, PostInterface::class);
             $this->postRepository->save($blogToSave);
-            $this->saveImageToBasePostDir($blogToSave->getImage());
             $this->messageManager->addSuccessMessage(__('You successfully saved the news.'));
-        } catch (LocalizedException $e) {
+            $pathToRedirect = ['*/*/edit', ['_current' => true, PostInterface::FIELD_POST_ID => $blogPostId]];
+        } catch (CouldNotSaveException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
+            if ($blogPostId) {
+                $pathToRedirect = ['*/*/edit', ['_current' => true, PostInterface::FIELD_POST_ID => $blogPostId]];
+            }
+        } catch (NoSuchEntityException $e) {
+            $this->messageManager->addErrorMessage(__('Post with ID: %1 no longer exist', $blogPostId));
         }
 
-        return $redirect->setPath('*/*/', []);
+        return $redirect->setPath(...$pathToRedirect);
     }
 
     /**
-     * Move image from tmp dir to base post images dir.
+     * Return image name to save. If image is new move it to base posts image dir.
      *
-     * @param string $imageName
-     * @return void
+     * @return string
      */
-    private function saveImageToBasePostDir(string $imageName): void
+    private function getImageName(): string
     {
         $blogPostData = $this->getRequest()->getPostValue('blog');
-
-        if ($imageName
-            && isset($blogPostData[PostInterface::FIELD_IMAGE][0]['tmp_name'])
-        ) {
-            try {
-                $this->imageUploader->moveFileFromTmp($imageName);
-            } catch (LocalizedException $e) {
-                $this->messageManager->addNoticeMessage(__('Image was not save. Cause: %1', $e->getMessage()));
+        $resultImageName = '';
+        $postImageData = $blogPostData[PostInterface::FIELD_IMAGE][0] ?? null;
+        if (null !== $postImageData) {
+            $resultImageName = $postImageData['name'];
+            if (isset($postImageData['tmp_name'])) {
+                try {
+                    $newRelativeImagePath = $this->imageUploader->moveFileFromTmp($resultImageName, true);
+                    $resultImageName = str_replace('catalog/product/post/image/', '', $newRelativeImagePath);
+                } catch (LocalizedException $e) {
+                    $this->messageManager->addNoticeMessage(__('Image was not save. Cause: %1', $e->getMessage()));
+                }
             }
+
         }
+
+        return $resultImageName;
     }
 }

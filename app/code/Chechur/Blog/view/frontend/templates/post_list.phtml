@@ -4,8 +4,8 @@
  * @var \Magento\Framework\Escaper $escaper
  */
 ?>
-<?php if ($block->checkPostsEnabled() && !empty($block->getPosts())): ?>
-    <h1><?= /* @noEscape */ $block->getBlockTitle(); ?></h1>
+<?php if ($block->isPostsEnabled() && !empty($block->getPosts())): ?>
+    <h1><?= $escaper->escapeHtml($block->getBlockTitle()); ?></h1>
     <div class="post-view">
         <div class="post-holder post-holder-<?= $escaper->escapeHtmlAttr($block->getId()); ?>">
             <div class="post-content">

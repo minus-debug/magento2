@@ -58,13 +58,9 @@ class Image extends Column
         if (isset($dataSource['data']['items'])) {
 
             foreach ($dataSource['data']['items'] as & $item) {
-                if ($item['image']) {
-                    $item['image' . '_src'] = $this->getPostImage($item['image']);
-                    $item['image' . '_orig_src'] = $this->getPostImage($item['image']);
-                } else {
-                    $item['image' . '_src'] = $this->getPostImage($item['image']);
-                    $item['image' . '_orig_src'] = $this->getPostImage($item['image']);
-                }
+                $image = $this->getPostImage($item['image']) ?? '';
+                $item['image_src'] = $image;
+                $item['image_orig_src'] = $image;
             }
         }
 

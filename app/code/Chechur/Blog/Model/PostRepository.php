@@ -119,8 +119,7 @@ class PostRepository implements PostRepositoryInterface
      */
     public function deleteById(int $blogPostId): void
     {
-        $blogPost = $this->get($blogPostId);
-        $this->delete($blogPost);
+        $this->delete($this->get($blogPostId));
     }
 
     /**

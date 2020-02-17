@@ -60,7 +60,6 @@ class Upload extends Action implements HttpPostActionInterface
      */
     protected function _isAllowed(): bool
     {
-        return $this->_authorization->isAllowed('Chechur_blog::image_read') ||
-            $this->_authorization->isAllowed('Chechur_blog::image_create');
+        return $this->_authorization->isAllowed('Chechur_blog::post');
     }
 }

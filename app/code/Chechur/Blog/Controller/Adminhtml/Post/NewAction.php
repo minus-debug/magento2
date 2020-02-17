@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Chechur\Blog\Controller\Adminhtml\Post;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Class NewAction redirect to saveAction or editAction
+ * Create Blog post action.
  */
 class NewAction extends Action implements HttpGetActionInterface
 {
@@ -20,11 +21,11 @@ class NewAction extends Action implements HttpGetActionInterface
     private $resultPageFactory;
 
     /**
-     * @param Action\Context $context
+     * @param Context $context
      * @param PageFactory $resultPageFactory
      */
     public function __construct(
-        Action\Context $context,
+        Context $context,
         PageFactory $resultPageFactory
     ) {
         parent::__construct($context);

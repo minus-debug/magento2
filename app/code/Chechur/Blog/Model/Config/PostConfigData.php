@@ -35,7 +35,7 @@ class PostConfigData
      */
     public function isPostsEnabled(): bool
     {
-        return (bool)$this->scopeConfig->isSetFlag(self::IS_POSTS_ENABLED_CONFIG_PATH);
+        return $this->scopeConfig->isSetFlag(self::IS_POSTS_ENABLED_CONFIG_PATH);
     }
 
     /**

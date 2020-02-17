@@ -14,7 +14,6 @@
     <settings>
         <buttons>
             <button name="save" class="Chechur\Blog\Block\Adminhtml\Post\Edit\SaveButton"/>
-            <button name="delete" class="Chechur\Blog\Block\Adminhtml\Post\Edit\DeleteButton"/>
             <button name="reset" class="Chechur\Blog\Block\Adminhtml\Post\Edit\ResetButton"/>
             <button name="back" class="Chechur\Blog\Block\Adminhtml\Post\Edit\BackButton"/>
         </buttons>
