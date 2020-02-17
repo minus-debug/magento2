@@ -31,8 +31,6 @@ class DataProvider extends AbstractDataProvider
     private $storeManager;
 
     /**
-     * Constract DataProvider
-     *
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName

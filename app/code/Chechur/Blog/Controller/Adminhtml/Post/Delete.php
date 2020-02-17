@@ -32,8 +32,6 @@ class Delete extends Action implements HttpPostActionInterface
     private $postRepositoryInterface;
 
     /**
-     * Constract delete
-     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param PostRepositoryInterface $postRepositoryInterface
