@@ -33,16 +33,6 @@ class GenericButton
     }
 
     /**
-     * Return blog post block ID.
-     *
-     * @return int|null
-     */
-    public function getId()
-    {
-        return $this->context->getRequest()->getParam('id');
-    }
-
-    /**
      * Generate url by route and parameters
      *
      * @param string $route
@@ -52,5 +42,15 @@ class GenericButton
     public function getUrl(string $route = '', array $params = []): string
     {
         return $this->context->getUrlBuilder()->getUrl($route, $params);
+    }
+
+    /**
+     * Return blog post block ID.
+     *
+     * @return int|null
+     */
+    protected function getId(): ?int
+    {
+        return (int)$this->context->getRequest()->getParam('id');
     }
 }

@@ -128,7 +128,7 @@ class Save extends Action implements HttpPostActionInterface
                     $newRelativeImagePath = $this->imageUploader->moveFileFromTmp($resultImageName, true);
                     $resultImageName = str_replace('catalog/product/post/image/', '', $newRelativeImagePath);
                 } catch (LocalizedException $e) {
-                    $this->messageManager->addNoticeMessage(__('Image was not save. Cause: %1', $e->getMessage()));
+                    throw new CouldNotSaveException(__('Image was not save. Cause: %1', $e->getMessage()));
                 }
             }
 

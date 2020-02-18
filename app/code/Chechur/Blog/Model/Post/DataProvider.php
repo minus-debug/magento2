@@ -19,11 +19,6 @@ use Magento\Ui\DataProvider\AbstractDataProvider;
 class DataProvider extends AbstractDataProvider
 {
     /**
-     * @var Collection
-     */
-    protected $collection;
-
-    /**
      * @var array
      */
     private $loadedData;

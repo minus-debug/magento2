@@ -62,7 +62,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function getPostId(): ?int
     {
-        return $this->getData(PostInterface::FIELD_POST_ID) ? (int)$this->getData(PostInterface::FIELD_POST_ID) : null;
+        return (int)$this->getData(PostInterface::FIELD_POST_ID) ?? null;
     }
 
     /**

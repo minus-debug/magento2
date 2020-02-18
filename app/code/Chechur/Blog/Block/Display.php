@@ -10,7 +10,7 @@ use Chechur\Blog\Model\Post;
 use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Registry;
+use Magento\Catalog\Model\Locator\RegistryLocator;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -33,9 +33,9 @@ class Display extends Template
     private $collectionFactory;
 
     /**
-     * @var Registry
+     * @var RegistryLocator
      */
-    private $registry;
+    private $registryLocator;
 
     /**
      * @var StoreManagerInterface
@@ -61,7 +61,7 @@ class Display extends Template
      * @param Context $context
      * @param PostInterfaceFactory $postFactory
      * @param CollectionFactory $collectionFactory
-     * @param Registry $registry
+     * @param RegistryLocator $registryLocator
      * @param StoreManagerInterface $storeManager
      * @param PostConfigData $postConfigData
      */
@@ -69,13 +69,13 @@ class Display extends Template
         Context $context,
         PostInterfaceFactory $postFactory,
         CollectionFactory $collectionFactory,
-        Registry $registry,
+        RegistryLocator $registryLocator,
         StoreManagerInterface $storeManager,
         PostConfigData $postConfigData
     ) {
         parent::__construct($context);
         $this->storeManager = $storeManager;
-        $this->registry = $registry;
+        $this->registryLocator = $registryLocator;
         $this->collectionFactory = $collectionFactory;
         $this->postFactory = $postFactory;
         $this->postConfigData = $postConfigData;
@@ -166,7 +166,7 @@ class Display extends Template
         $postCollection = null;
 
         /** @var ProductInterface $product */
-        $product = $this->registry->registry('current_product');
+        $product = $this->registryLocator->getProduct();
         $productType = $product->getTypeId();
 
         if ($product

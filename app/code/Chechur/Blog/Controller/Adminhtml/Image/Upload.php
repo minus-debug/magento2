@@ -17,6 +17,7 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class Upload extends Action implements HttpPostActionInterface
 {
+    const ADMIN_RESOURCE = 'Chechur_Blog::post';
     /**
      * Property for Image Uploader
      *
@@ -51,15 +52,5 @@ class Upload extends Action implements HttpPostActionInterface
         }
 
         return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
-    }
-
-    /**
-     * Check permission to view or create image for posts.
-     *
-     * @return bool
-     */
-    protected function _isAllowed(): bool
-    {
-        return $this->_authorization->isAllowed('Chechur_blog::post');
     }
 }
