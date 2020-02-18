@@ -50,7 +50,7 @@ class Save extends Action implements HttpPostActionInterface
     /**
      * @var DataPersistorInterface
      */
-    protected $dataPersistor;
+    private $dataPersistor;
 
     /**
      * @param Context $context
@@ -97,6 +97,7 @@ class Save extends Action implements HttpPostActionInterface
             $this->dataPersistor->set('chechur_blog_post', $blogPostData);
             $this->dataObjectHelper->populateWithArray($blogToSave, $blogPostData, PostInterface::class);
             $this->postRepository->save($blogToSave);
+            $blogPostId = $blogToSave->getPostId();
             $this->messageManager->addSuccessMessage(__('You successfully saved the news.'));
             $pathToRedirect = ['*/*/edit', ['_current' => true, PostInterface::FIELD_POST_ID => $blogPostId]];
         } catch (CouldNotSaveException $e) {
@@ -126,7 +127,7 @@ class Save extends Action implements HttpPostActionInterface
             if (isset($postImageData['tmp_name'])) {
                 try {
                     $newRelativeImagePath = $this->imageUploader->moveFileFromTmp($resultImageName, true);
-                    $resultImageName = str_replace('catalog/product/post/image/', '', $newRelativeImagePath);
+                    $resultImageName = str_replace('post/image/', '', $newRelativeImagePath);
                 } catch (LocalizedException $e) {
                     throw new CouldNotSaveException(__('Image was not save. Cause: %1', $e->getMessage()));
                 }

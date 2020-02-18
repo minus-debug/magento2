@@ -19,6 +19,9 @@ use Magento\Framework\View\Result\PageFactory;
  */
 class Delete extends Action implements HttpPostActionInterface
 {
+    /**
+     * Constant Admin resource
+     */
     const ADMIN_RESOURCE = 'Chechur_Blog::post';
 
     /**
@@ -60,9 +63,7 @@ class Delete extends Action implements HttpPostActionInterface
         try {
             $this->postRepositoryInterface->deleteById($id);
             $this->messageManager->addSuccessMessage(__('Your post has been deleted !'));
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('Error while trying to delete post with ID: %1', $id));
-        } catch (CouldNotDeleteException $e) {
+        } catch (NoSuchEntityException| CouldNotDeleteException $e) {
             $this->messageManager->addErrorMessage(__('Something when wrong during process delete post ID: %1', $id));
             $redirect = ['*/*/edit', ['_current' => true, 'id' => $id]];
         }

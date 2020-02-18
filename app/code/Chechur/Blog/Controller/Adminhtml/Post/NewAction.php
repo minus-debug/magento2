@@ -16,6 +16,10 @@ use Magento\Framework\View\Result\PageFactory;
 class NewAction extends Action implements HttpGetActionInterface
 {
     /**
+     * Constant Admin resource
+     */
+    const ADMIN_RESOURCE = 'Chechur_Blog::post';
+    /**
      * @var PageFactory
      */
     private $resultPageFactory;

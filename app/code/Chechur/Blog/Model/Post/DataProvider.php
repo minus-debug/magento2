@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Chechur\Blog\Model\Post;
 
 use Chechur\Blog\Api\Data\PostInterface;
-use Chechur\Blog\Model\Post;
-use Chechur\Blog\Model\ResourceModel\Post\Collection;
+use Chechur\Blog\Model\Config\BlogMediaConfig;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Framework\App\Request\DataPersistorInterface;
-use Magento\Framework\UrlInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Ui\DataProvider\AbstractDataProvider;
 
 /**
@@ -24,22 +21,22 @@ class DataProvider extends AbstractDataProvider
     private $loadedData;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var DataPersistorInterface
      */
-    protected $dataPersistor;
+    private $dataPersistor;
+
+    /**
+     * @var BlogMediaConfig
+     */
+    private $blogMediaConfig;
 
     /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param CollectionFactory $postCollectionFactory
-     * @param StoreManagerInterface $storeManager
      * @param DataPersistorInterface $dataPersistor
+     * @param BlogMediaConfig $blogMediaConfig
      * @param array $meta
      * @param array $data
      */
@@ -48,14 +45,14 @@ class DataProvider extends AbstractDataProvider
         $primaryFieldName,
         $requestFieldName,
         CollectionFactory $postCollectionFactory,
-        StoreManagerInterface $storeManager,
         DataPersistorInterface $dataPersistor,
+        BlogMediaConfig $blogMediaConfig,
         array $meta = [],
         array $data = []
     ) {
         $this->collection = $postCollectionFactory->create();
-        $this->storeManager = $storeManager;
         $this->dataPersistor = $dataPersistor;
+        $this->blogMediaConfig = $blogMediaConfig;
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
 
@@ -76,17 +73,6 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
-     * Get Media Url
-     *
-     * @return string
-     */
-    private function getMediaUrl(): string
-    {
-        return $this->storeManager->getStore()
-                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
-    }
-
-    /**
      * Build data to render.
      *
      * @return array
@@ -99,13 +85,11 @@ class DataProvider extends AbstractDataProvider
         }
         $dataToRender[PostInterface::FIELD_POST_ID] = $dataToRender[PostInterface::FIELD_POST_ID] ?? null;
 
-        if (isset($dataToRender[PostInterface::FIELD_IMAGE])
-            && is_string($dataToRender[PostInterface::FIELD_IMAGE])
-        ) {
+        if (!empty(($dataToRender[PostInterface::FIELD_IMAGE]))) {
             $dataToRender[PostInterface::FIELD_IMAGE] = [
                 [
                     'name' => $dataToRender[PostInterface::FIELD_IMAGE],
-                    'url' => $this->getMediaUrl() . $dataToRender[PostInterface::FIELD_IMAGE],
+                    'url' => $this->blogMediaConfig->getMediaUrl($dataToRender[PostInterface::FIELD_IMAGE]),
                 ],
             ];
         }

@@ -19,6 +19,11 @@ use Magento\Ui\Component\MassAction\Filter;
 class MassDelete extends Action implements HttpPostActionInterface
 {
     /**
+     * Constant Admin resource
+     */
+    const ADMIN_RESOURCE = 'Chechur_Blog::post';
+
+    /**
      * @var Filter
      */
     private $filter;
@@ -60,9 +65,9 @@ class MassDelete extends Action implements HttpPostActionInterface
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         try {
-            $logCollection = $this->filter->getCollection($this->collectionFactory->create());
+            $blogCollection = $this->filter->getCollection($this->collectionFactory->create());
             $itemsDeleted = $itemsDeletedError = 0;
-            foreach ($logCollection as $item) {
+            foreach ($blogCollection as $item) {
                 try {
                     $this->postRepository->delete($item);
                     $itemsDeleted++;

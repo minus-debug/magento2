@@ -11,6 +11,8 @@ use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\RegistryLocator;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -121,7 +123,7 @@ class Display extends Template
             ->getStore()
             ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
 
-        return $mediaUrl . 'catalog/product/post/image/' . $image;
+        return $mediaUrl . 'post/image/' . $image;
     }
 
     /**
@@ -166,7 +168,11 @@ class Display extends Template
         $postCollection = null;
 
         /** @var ProductInterface $product */
-        $product = $this->registryLocator->getProduct();
+        try {
+            $product = $this->registryLocator->getProduct();
+        } catch (NotFoundException $e) {
+            $product = null;
+        }
         $productType = $product->getTypeId();
 
         if ($product

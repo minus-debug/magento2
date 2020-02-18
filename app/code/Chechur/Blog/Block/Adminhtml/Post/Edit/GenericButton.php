@@ -51,6 +51,6 @@ class GenericButton
      */
     protected function getId(): ?int
     {
-        return (int)$this->context->getRequest()->getParam('id');
+        return (int)$this->context->getRequest()->getParam('id') ?? null;
     }
 }

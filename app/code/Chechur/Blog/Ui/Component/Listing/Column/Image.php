@@ -76,12 +76,11 @@ class Image extends Column
     private function getPostImage(string $image): string
     {
         $result = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
-        $path = $this->storeManager
-                ->getStore()
-                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/post/image/';
 
         if (!empty($image)) {
-            $result = $path . $image;
+            $result = $this->storeManager
+                    ->getStore()
+                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/image/' . $image;
         }
 
         return $result;

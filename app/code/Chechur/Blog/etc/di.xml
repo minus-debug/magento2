@@ -22,8 +22,8 @@
     </virtualType>
     <virtualType name="Chechur\Blog\Model\PostImageUploader" type="Magento\Catalog\Model\ImageUploader">
         <arguments>
-            <argument name="baseTmpPath" xsi:type="string">catalog/product/post/tmp/image</argument>
-            <argument name="basePath" xsi:type="string">catalog/product/post/image</argument>
+            <argument name="baseTmpPath" xsi:type="string">post/tmp/image</argument>
+            <argument name="basePath" xsi:type="string">post/image</argument>
             <argument name="allowedExtensions" xsi:type="array">
                 <item name="jpg" xsi:type="string">jpg</item>
                 <item name="jpeg" xsi:type="string">jpeg</item>

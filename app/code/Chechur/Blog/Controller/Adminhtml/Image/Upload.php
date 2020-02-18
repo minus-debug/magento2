@@ -3,54 +3,18 @@ declare(strict_types=1);
 
 namespace Chechur\Blog\Controller\Adminhtml\Image;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Catalog\Model\ImageUploader;
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Catalog\Controller\Adminhtml\Category\Image\Upload as CoreUpload;
 
 /**
  * Class Upload image to tmp dir
  */
-class Upload extends Action implements HttpPostActionInterface
+class Upload extends CoreUpload
 {
-    const ADMIN_RESOURCE = 'Chechur_Blog::post';
     /**
-     * Property for Image Uploader
-     *
-     * @var ImageUploader
+     * @inheritDoc
      */
-    private $imageUploader;
-
-    /**
-     * @param Context $context
-     * @param ImageUploader $imageUploader
-     */
-    public function __construct(
-        Context $context,
-        ImageUploader $imageUploader
-    ) {
-        parent::__construct($context);
-        $this->imageUploader = $imageUploader;
-    }
-
-    /**
-     * Upload post image.
-     *
-     * @return ResponseInterface|ResultInterface
-     */
-    public function execute()
+    public function _isAllowed()
     {
-        $imageId = $this->_request->getParam('param_name', 'image');
-        try {
-            $result = $this->imageUploader->saveFileToTmpDir($imageId);
-        } catch (LocalizedException $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
-        }
-
-        return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
+        return 'Chechur_Blog::post';
     }
 }
