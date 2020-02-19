@@ -67,7 +67,11 @@ class DataProvider extends AbstractDataProvider
             return $this->loadedData;
         }
         $dataToRender = $this->getDataToRender();
-        $this->loadedData[$dataToRender[PostInterface::FIELD_POST_ID]] = ['blog' => $dataToRender];
+        $this->loadedData = [];
+
+        if (isset($dataToRender[PostInterface::FIELD_POST_ID])) {
+            $this->loadedData[$dataToRender[PostInterface::FIELD_POST_ID]] = ['blog' => $dataToRender];
+        }
 
         return $this->loadedData;
     }
@@ -83,7 +87,6 @@ class DataProvider extends AbstractDataProvider
         if (empty($dataToRender)) {
             $dataToRender = $this->collection->getFirstItem()->getData();
         }
-        $dataToRender[PostInterface::FIELD_POST_ID] = $dataToRender[PostInterface::FIELD_POST_ID] ?? null;
 
         if (!empty(($dataToRender[PostInterface::FIELD_IMAGE]))) {
             $dataToRender[PostInterface::FIELD_IMAGE] = [

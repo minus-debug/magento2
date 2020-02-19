@@ -11,7 +11,6 @@ use Magento\Backend\App\Action\Context;
 use Magento\Catalog\Model\ImageUploader;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
@@ -48,32 +47,24 @@ class Save extends Action implements HttpPostActionInterface
     private $imageUploader;
 
     /**
-     * @var DataPersistorInterface
-     */
-    private $dataPersistor;
-
-    /**
      * @param Context $context
      * @param DataObjectHelper $dataObjectHelper
      * @param PostInterfaceFactory $postFactory
      * @param PostRepositoryInterface $postRepository
      * @param ImageUploader $imageUploader
-     * @param DataPersistorInterface $dataPersistor
      */
     public function __construct(
         Context $context,
         DataObjectHelper $dataObjectHelper,
         PostInterfaceFactory $postFactory,
         PostRepositoryInterface $postRepository,
-        ImageUploader $imageUploader,
-        DataPersistorInterface $dataPersistor
+        ImageUploader $imageUploader
     ) {
         parent::__construct($context);
         $this->dataObjectHelper = $dataObjectHelper;
         $this->postFactory = $postFactory;
         $this->postRepository = $postRepository;
         $this->imageUploader = $imageUploader;
-        $this->dataPersistor = $dataPersistor;
     }
 
     /**
@@ -94,10 +85,9 @@ class Save extends Action implements HttpPostActionInterface
             $blogPostId = $blogPostData[PostInterface::FIELD_POST_ID] ?? null;
             $blogPostData[PostInterface::FIELD_IMAGE] = $this->getImageName();
             $blogToSave = $blogPostId ? $this->postRepository->get((int)$blogPostId) : $this->postFactory->create();
-            $this->dataPersistor->set('chechur_blog_post', $blogPostData);
             $this->dataObjectHelper->populateWithArray($blogToSave, $blogPostData, PostInterface::class);
-            $this->postRepository->save($blogToSave);
-            $blogPostId = $blogToSave->getPostId();
+            $savedBlog = $this->postRepository->save($blogToSave);
+            $blogPostId = $savedBlog->getPostId();
             $this->messageManager->addSuccessMessage(__('You successfully saved the news.'));
             $pathToRedirect = ['*/*/edit', ['_current' => true, PostInterface::FIELD_POST_ID => $blogPostId]];
         } catch (CouldNotSaveException $e) {
