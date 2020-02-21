@@ -48,19 +48,17 @@ class BlogMediaConfig
     }
 
     /**
-     * Get media path for image.
+     * Get media url image for data source.
      *
      * @param string $image
      * @return string
      */
-    public function getPostImage(string $image): string
+    public function getUrlImageForDataSource(string $image): string
     {
         $result = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
 
         if (!empty($image)) {
-            $result = $this->storeManager
-                    ->getStore()
-                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/image/' . $image;
+            $result = $this->getMediaUrl($image);
         }
 
         return $result;
