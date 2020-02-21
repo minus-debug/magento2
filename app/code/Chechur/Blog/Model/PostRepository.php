@@ -17,6 +17,7 @@ use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
@@ -128,7 +129,11 @@ class PostRepository implements PostRepositoryInterface
     public function getList(SearchCriteriaInterface $searchCriteria): SearchResultsInterface
     {
         $postCollection = $this->collectionFactory->create();
-        $this->collectionProcessor->process($searchCriteria, $postCollection);
+        try {
+            $this->collectionProcessor->process($searchCriteria, $postCollection);
+        } catch (\InvalidArgumentException $e) {
+            throw new LocalizedException(__('Something went wrong during process get posts list.'));
+        }
         $searchResult = $this->searchResultFactory->create();
         $searchResult->setItems($postCollection->getItems());
         $searchResult->setSearchCriteria($searchCriteria);

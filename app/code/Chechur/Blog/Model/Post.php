@@ -52,9 +52,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setPostId(?int $postId): PostInterface
     {
-        $this->setData(PostInterface::FIELD_POST_ID, $postId);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_POST_ID, $postId);
     }
 
     /**
@@ -70,9 +68,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setTheme(string $theme): PostInterface
     {
-        $this->setData(PostInterface::FIELD_THEME, $theme);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_THEME, $theme);
     }
 
     /**
@@ -88,9 +84,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setType(string $type): PostInterface
     {
-        $this->setData(PostInterface::FIELD_TYPE, $type);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_TYPE, $type);
     }
 
     /**
@@ -106,9 +100,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setPostContent(string $postContent): PostInterface
     {
-        $this->setData(PostInterface::FIELD_POST_CONTENT, $postContent);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_POST_CONTENT, $postContent);
     }
 
     /**
@@ -124,9 +116,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setImage(string $image): PostInterface
     {
-        $this->setData(PostInterface::FIELD_IMAGE, $image);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_IMAGE, $image);
     }
 
     /**
@@ -142,9 +132,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setCreatedAt(string $createdAt): PostInterface
     {
-        $this->setData(PostInterface::FIELD_CREATED_AT, $createdAt);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_CREATED_AT, $createdAt);
     }
 
     /**
@@ -160,9 +148,7 @@ class Post extends AbstractModel implements IdentityInterface, PostInterface
      */
     public function setUpdatedAt(string $updatedAt): PostInterface
     {
-        $this->setData(PostInterface::FIELD_UPDATED_AT, $updatedAt);
-
-        return $this;
+        return $this->setData(PostInterface::FIELD_UPDATED_AT, $updatedAt);
     }
 
     /**

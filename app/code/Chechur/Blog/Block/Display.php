@@ -5,18 +5,16 @@ namespace Chechur\Blog\Block;
 
 use Chechur\Blog\Api\Data\PostInterface;
 use Chechur\Blog\Api\Data\PostInterfaceFactory;
+use Chechur\Blog\Model\Config\BlogMediaConfig;
 use Chechur\Blog\Model\Config\PostConfigData;
 use Chechur\Blog\Model\Post;
 use Chechur\Blog\Model\ResourceModel\Post\Collection;
 use Chechur\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\RegistryLocator;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
-use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Block\Html\Pager;
 
 /**
@@ -40,11 +38,6 @@ class Display extends Template
     private $registryLocator;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var Collection
      */
     private $postCollection;
@@ -53,6 +46,11 @@ class Display extends Template
      * @var PostConfigData
      */
     private $postConfigData;
+
+    /**
+     * @var BlogMediaConfig
+     */
+    private $blogMediaConfig;
 
     /**
      * @var Post[]
@@ -64,23 +62,23 @@ class Display extends Template
      * @param PostInterfaceFactory $postFactory
      * @param CollectionFactory $collectionFactory
      * @param RegistryLocator $registryLocator
-     * @param StoreManagerInterface $storeManager
      * @param PostConfigData $postConfigData
+     * @param BlogMediaConfig $blogMediaConfig
      */
     public function __construct(
         Context $context,
         PostInterfaceFactory $postFactory,
         CollectionFactory $collectionFactory,
         RegistryLocator $registryLocator,
-        StoreManagerInterface $storeManager,
-        PostConfigData $postConfigData
+        PostConfigData $postConfigData,
+        BlogMediaConfig $blogMediaConfig
     ) {
         parent::__construct($context);
-        $this->storeManager = $storeManager;
         $this->registryLocator = $registryLocator;
         $this->collectionFactory = $collectionFactory;
         $this->postFactory = $postFactory;
         $this->postConfigData = $postConfigData;
+        $this->blogMediaConfig = $blogMediaConfig;
     }
 
     /**
@@ -119,11 +117,7 @@ class Display extends Template
      */
     public function getImageUrl(string $image): string
     {
-        $mediaUrl = $this->storeManager
-            ->getStore()
-            ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
-
-        return $mediaUrl . 'post/image/' . $image;
+        return $this->blogMediaConfig->getMediaUrl($image);
     }
 
     /**
@@ -133,7 +127,7 @@ class Display extends Template
      */
     public function isPostsEnabled(): bool
     {
-        return (bool)$this->postConfigData->isPostsEnabled();
+        return $this->postConfigData->isPostsEnabled();
     }
 
     /**
@@ -173,7 +167,10 @@ class Display extends Template
         } catch (NotFoundException $e) {
             $product = null;
         }
-        $productType = $product->getTypeId();
+
+        if (null !== $product) {
+            $productType = $product->getTypeId();
+        }
 
         if ($product
             && in_array($productType, $this->postConfigData->getAvailableProductTypes(), true)

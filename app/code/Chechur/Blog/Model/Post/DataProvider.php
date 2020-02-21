@@ -50,10 +50,10 @@ class DataProvider extends AbstractDataProvider
         array $meta = [],
         array $data = []
     ) {
+        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
         $this->collection = $postCollectionFactory->create();
         $this->dataPersistor = $dataPersistor;
         $this->blogMediaConfig = $blogMediaConfig;
-        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
 
     /**

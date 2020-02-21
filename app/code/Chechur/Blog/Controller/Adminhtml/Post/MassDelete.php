@@ -39,21 +39,21 @@ class MassDelete extends Action implements HttpPostActionInterface
     private $postRepository;
 
     /**
-     * @param Filter $filter
-     * @param CollectionFactory $collectionFactory
-     * @param PostRepositoryInterface $postRepository
      * @param Context $context
+     * @param PostRepositoryInterface $postRepository
+     * @param CollectionFactory $collectionFactory
+     * @param Filter $filter
      */
     public function __construct(
-        Filter $filter,
-        CollectionFactory $collectionFactory,
+        Context $context,
         PostRepositoryInterface $postRepository,
-        Context $context
+        CollectionFactory $collectionFactory,
+        Filter $filter
     ) {
-        $this->filter = $filter;
-        $this->collectionFactory = $collectionFactory;
-        $this->postRepository = $postRepository;
         parent::__construct($context);
+        $this->postRepository = $postRepository;
+        $this->collectionFactory = $collectionFactory;
+        $this->filter = $filter;
     }
 
     /**

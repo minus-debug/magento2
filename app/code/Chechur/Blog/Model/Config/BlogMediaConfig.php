@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Chechur\Blog\Model\Config;
 
 use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Asset\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -18,12 +19,20 @@ class BlogMediaConfig
     private $storeManager;
 
     /**
+     * @var Repository
+     */
+    private $assetRepo;
+
+    /**
      * @param StoreManagerInterface $storeManager
+     * @param Repository $assetRepo
      */
     public function __construct(
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        Repository $assetRepo
     ) {
         $this->storeManager = $storeManager;
+        $this->assetRepo = $assetRepo;
     }
 
     /**
@@ -36,5 +45,24 @@ class BlogMediaConfig
     {
         return $this->storeManager->getStore()
                 ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/image/' . $image;
+    }
+
+    /**
+     * Get media path for image.
+     *
+     * @param string $image
+     * @return string
+     */
+    public function getPostImage(string $image): string
+    {
+        $result = $this->assetRepo->getUrl('Chechur_Blog::images/faq.png');
+
+        if (!empty($image)) {
+            $result = $this->storeManager
+                    ->getStore()
+                    ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'post/image/' . $image;
+        }
+
+        return $result;
     }
 }

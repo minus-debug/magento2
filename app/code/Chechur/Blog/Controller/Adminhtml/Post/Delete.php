@@ -44,9 +44,9 @@ class Delete extends Action implements HttpPostActionInterface
         PageFactory $resultPageFactory,
         PostRepositoryInterface $postRepositoryInterface
     ) {
+        parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->postRepositoryInterface = $postRepositoryInterface;
-        parent::__construct($context);
     }
 
     /**

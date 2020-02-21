@@ -9,6 +9,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
@@ -58,6 +59,7 @@ interface PostRepositoryInterface
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @return SearchResultsInterface
+     * @throws LocalizedException
      */
     public function getList(
         SearchCriteriaInterface $searchCriteria

@@ -13,7 +13,7 @@ class Upload extends CoreUploadImage
     /**
      * @inheritDoc
      */
-    public function _isAllowed()
+    protected function _isAllowed()
     {
         return 'Chechur_Blog::post';
     }
