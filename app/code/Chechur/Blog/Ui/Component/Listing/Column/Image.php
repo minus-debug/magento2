@@ -57,7 +57,7 @@ class Image extends Column
         if (isset($dataSource['data']['items'])) {
 
             foreach ($dataSource['data']['items'] as & $item) {
-                $image = $this->blogMediaConfig->getPostImage($item['image']) ?? '';
+                $image = $this->blogMediaConfig->getUrlImageForDataSource($item['image']) ?? '';
                 $item['image_src'] = $image;
                 $item['image_orig_src'] = $image;
             }
