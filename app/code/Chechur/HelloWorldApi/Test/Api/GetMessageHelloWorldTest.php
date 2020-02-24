@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Chechur\HelloWorldApi\Test\Api\Data;
+namespace Chechur\HelloWorldApi\Test\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
@@ -28,9 +28,9 @@ class GetMessageHelloWorldTest extends WebapiAbstract
                 'httpMethod' => Request::HTTP_METHOD_GET,
             ],
             'soap' => [
-                'service' => 'chechurHelloWorldApiDataGetMessageHelloWorldV1',
+                'service' => 'chechurHelloWorldApiGetMessageHelloWorldV1',
                 'serviceVersion' => 'V1',
-                'operation' => 'chechurHelloWorldApiDataGetMessageHelloWorldV1Execute',
+                'operation' => 'chechurHelloWorldApiGetMessageHelloWorldV1Execute',
             ],
         ];
         $this->assertEquals('<h1>__prefix__Hello World__suffix</h1>', $this->_webApiCall($serviceInfo));

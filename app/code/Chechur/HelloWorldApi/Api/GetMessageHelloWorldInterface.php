@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Chechur\HelloWorldApi\Api\Data;
+namespace Chechur\HelloWorldApi\Api;
 
 /**
  * Interface GetMessageHelloWorldInterface.

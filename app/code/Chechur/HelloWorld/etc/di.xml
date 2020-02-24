@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface"
-                type="Chechur\HelloWorld\Model\GetMessageHelloWorld" />
-    <type name="Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface">
-        <plugin name="add_prefix_to_message" type="Chechur\HelloWorld\Plugin\Model\GetMessageHelloWorld\AddPrefixToMessage" sortOrder="10"/>
-        <plugin name="add_h1_tags_around_message" type="Chechur\HelloWorld\Plugin\Model\GetMessageHelloWorld\AddTagsToMessage" sortOrder="20"/>
-        <plugin name="add_suffix_to_message" type="Chechur\HelloWorld\Plugin\Model\GetMessageHelloWorld\AddSuffixToMessage" sortOrder="30"/>
-    </type>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface"
+                type="Chechur\HelloWorld\Model\GetMessageHelloWorld"/>
 </config>

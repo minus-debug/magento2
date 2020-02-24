@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Chechur\HelloWorld\Test\Integration\Model;
 
-use Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface;
+use Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Test cases related to check that message was returned correctly.
  *
- * @see \Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface::execute
+ * @see \Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface::execute
  */
 class GetMessageHelloWorldTest extends TestCase
 {

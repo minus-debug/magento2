@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Chechur\HelloWorld\Plugin\Model\GetMessageHelloWorld;
+namespace Chechur\HelloWorldChangeMessage\Plugin\HelloWorldApi\Api\GetMessageHelloWorld;
 
-use Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface;
+use Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface;
 
 /**
  * Add prefix to message. This plugin will be call before call around plugin.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Chechur\HelloWorld\Model;
 
-use Chechur\HelloWorldApi\Api\Data\GetMessageHelloWorldInterface;
+use Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface;
 
 /**
  * @inheritDoc
