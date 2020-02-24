@@ -1,0 +1,42 @@
+<?php
+/**
+ * @var \Chechur\Blog\Block\Display $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php if ($block->isPostsEnabled() && !empty($block->getPosts())): ?>
+    <h1><?= $escaper->escapeHtml($block->getBlockTitle()); ?></h1>
+    <div class="post-view">
+        <div class="post-holder post-holder-<?= $escaper->escapeHtmlAttr($block->getId()); ?>">
+            <div class="post-content">
+                <div class="post-description clearfix">
+                    <div class="post-text-hld">
+                        <?php foreach ($block->getPosts() as $post): ?>
+                            <div class="post-content">
+                                <h2 align="center"><?= $escaper->escapeHtml($post->getTheme()); ?></h2><br>
+                                <?php if (!empty($post->getImage())): ?>
+                                    <img
+                                        src="<?= /* @noEscape */ $block->getImageUrl($post->getImage()); ?>"
+                                        width="100"
+                                        height="100"
+                                        align="right"
+                                    >
+                                <?php endif; ?>
+                                <p align="justify"><?= $escaper->escapeHtml($post->getPostContent()); ?></p><br>
+                                <p align="right">
+                                    <?= $escaper->escapeHtml(
+                                        (string)__('Post created at: %1', $post->getCreatedAt())
+                                    ); ?>
+                                </p><br>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="blog-post-pager">
+                        <?= $block->getChildHtml('blog.post.pager'); ?>
+                    </div>
+                    <div class="clear clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
