@@ -2,6 +2,6 @@
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="StorefrontCheckHelloMessageSection">
-        <element name="helloMessage" type="text" selector="//div[contains(@class,'hello-world-container')]//h1"/>
+        <element name="helloMessage" type="text" selector="div.hello-world-container h1"/>
     </section>
 </sections>

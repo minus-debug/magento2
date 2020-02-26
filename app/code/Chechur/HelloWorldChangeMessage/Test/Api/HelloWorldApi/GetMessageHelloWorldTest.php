@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Chechur\HelloWorldApi\Test\Api;
+namespace Chechur\HelloWorldChangeMessage\Test\Api\HelloWorldApi;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;

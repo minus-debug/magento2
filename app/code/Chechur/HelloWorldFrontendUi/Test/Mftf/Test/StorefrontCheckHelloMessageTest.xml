@@ -12,7 +12,7 @@
             <useCaseId value="63370"/>
             <group value="Chechur"/>
         </annotations>
-        <amOnPage url="" stepKey="amOnPageTestPage"/>
-        <see selector="{{StorefrontCheckHelloMessageSection.helloMessage}}" userInput="__prefix__Hello World__suffix" stepKey="seeHelloMessage"/>
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="StorefrontOpenHomePage"/>
+        <actionGroup ref="StorefrontOpenHomePageAndCheckMessageActionGroup" stepKey="StorefrontCheckMessage"/>
     </test>
 </tests>

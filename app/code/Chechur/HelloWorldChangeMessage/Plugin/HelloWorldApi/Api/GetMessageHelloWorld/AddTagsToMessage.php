@@ -16,15 +16,17 @@ class AddTagsToMessage
      *
      * @param GetMessageHelloWorldInterface $getMessageHelloWorld
      * @param \Closure $proceed
-     * @param string $result
+     * @param string $args
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
         GetMessageHelloWorldInterface $getMessageHelloWorld,
         \Closure $proceed,
-        string $result
+        string $args
     ): string {
-        return "<h1>{$result}{$proceed()}</h1>";
+        $args = $args . $proceed($args);
+
+        return "<h1>{$args}__suffix</h1>";
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Chechur\HelloWorld\Test\Integration\Model;
 
-use Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterface;
+use Chechur\HelloWorldApi\Api\GetMessageHelloWorldInterfaceFactory;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -22,9 +22,9 @@ class GetMessageHelloWorldTest extends TestCase
     private $objectManager;
 
     /**
-     * @var GetMessageHelloWorldInterface
+     * @var GetMessageHelloWorldInterfaceFactory
      */
-    private $getMessageHelloWorld;
+    private $getMessageHelloWorldFactory;
 
     /**
      * @inheritDoc
@@ -32,7 +32,7 @@ class GetMessageHelloWorldTest extends TestCase
     protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
-        $this->getMessageHelloWorld = $this->objectManager->get(GetMessageHelloWorldInterface::class);
+        $this->getMessageHelloWorldFactory = $this->objectManager->get(GetMessageHelloWorldInterfaceFactory::class);
         parent::setUp();
     }
 
@@ -43,6 +43,7 @@ class GetMessageHelloWorldTest extends TestCase
      */
     public function testExecute(): void
     {
-        $this->assertEquals('<h1>__prefix__Hello World__suffix</h1>', $this->getMessageHelloWorld->execute());
+        $helloWorld = $this->getMessageHelloWorldFactory->create();
+        $this->assertEquals('<h1>__prefix__Hello World__suffix</h1>', $helloWorld->execute());
     }
 }
