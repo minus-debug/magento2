@@ -15,12 +15,12 @@ class AddSuffixToMessage
      * Add suffix to message.
      *
      * @param GetMessageHelloWorldInterface $getMessageHelloWorld
-     * @param string $args
+     * @param string $result
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(GetMessageHelloWorldInterface $getMessageHelloWorld, string $args): string
+    public function afterExecute(GetMessageHelloWorldInterface $getMessageHelloWorld, string $result): string
     {
-        return $args;
+        return $result;
     }
 }

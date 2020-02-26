@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-    <actionGroup name="StorefrontOpenHomePageAndCheckMessageActionGroup">
+    <actionGroup name="StorefrontCheckMessageActionGroup">
         <annotations>
-            <description>Upload page and check message.</description>
+            <description>Check message on home page.</description>
         </annotations>
         <arguments>
             <argument name="userInput" defaultValue="__prefix__Hello World__suffix" type="string"/>

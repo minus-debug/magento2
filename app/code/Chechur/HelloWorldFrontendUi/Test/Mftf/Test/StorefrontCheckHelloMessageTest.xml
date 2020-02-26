@@ -13,6 +13,6 @@
             <group value="Chechur"/>
         </annotations>
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="StorefrontOpenHomePage"/>
-        <actionGroup ref="StorefrontOpenHomePageAndCheckMessageActionGroup" stepKey="StorefrontCheckMessage"/>
+        <actionGroup ref="StorefrontCheckMessageActionGroup" stepKey="StorefrontCheckMessage"/>
     </test>
 </tests>

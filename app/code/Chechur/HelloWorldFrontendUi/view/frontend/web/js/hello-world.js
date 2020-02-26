@@ -18,9 +18,9 @@ define([
          */
         initObservable: function () {
             this._super().observe([
-                'helloMessage'
+                'helloMessage',
+                this.updateMessage()
             ]);
-            this.updateMessage();
 
             return this;
         },
