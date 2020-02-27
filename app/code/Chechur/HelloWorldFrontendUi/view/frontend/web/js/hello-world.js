@@ -14,12 +14,21 @@ define([
         },
 
         /**
+         *@inheritDoc
+         */
+        initialize: function () {
+            this._super()
+                .updateMessage();
+
+            return this;
+        },
+
+        /**
          * @returns {Object}
          */
         initObservable: function () {
             this._super().observe([
-                'helloMessage',
-                this.updateMessage()
+                'helloMessage'
             ]);
 
             return this;
